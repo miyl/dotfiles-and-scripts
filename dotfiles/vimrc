@@ -1,0 +1,227 @@
+" Enables syntax hilighting:
+syntax on
+
+" Sets the colorscheme to Zenburn:
+colorscheme zenburn
+
+" Turns off strict vi compatibility:
+set nocp
+
+" When I close a tab, remove the buffer
+set nohidden
+
+" Makes the BackSpace-button work:
+set backspace=indent,eol,start
+
+" Set the file encoding to utf8:
+set fileencoding=utf8
+set encoding=utf-8
+
+" Should enforce mouse copying and pasting capabilities:
+set mouse=a
+
+" Sets the use of the * register rather than the + register (useful for copying and pasting):
+" unnamedplus is the standard internal vim buffer, and * is selection. This should sync them.
+set clipboard=unnamedplus
+
+" Some search-related features:
+" ignorecase makes the search case insensitive.
+" smartcase makes a search containing any upper case letters case sensitive.
+set ignorecase
+set smartcase
+
+" TESTING: Match /searches as typed (saves time)
+set incsearch
+
+
+" Tabstop: Sets how many spaces a manually inserted tab consists of.
+" Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
+" Expandtab: changes inserted tabs to spaces, so noexpandtab should prevent
+" that, I guess? Wonder what's default.
+" Softtabstop:
+set tabstop=4
+set shiftwidth=4
+set noexpandtab
+set softtabstop=4
+
+" Keep a newline at the same level as the current indentation.
+set autoindent
+" smartindent' automatically inserts one extra level of indentation in some
+" cases, and works for C-like files. 
+" An alternative, which is NOT to be used along with smartindent, is file type
+" based indentation.
+set smartindent
+
+" More info: http://vim.wikia.com/wiki/Indenting_source_code#.27autoindent.27
+
+" Delete tabs as one space, use tabs at the start of a line, spaces
+" elsewhere.
+set smarttab
+
+" Vim has some strange behaviour of autoindenting like crazy when you paste text into it, if autoindent is enabled. This should simplify switching autoindent on and off, which is at least some kind of solution.
+" showmode makes vim show what mode you're in, except for normal mode.
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+
+" Otherwise vim complains when I open some files, even though this is related to pattern matching.
+" set maxmempattern=2000
+
+" Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
+filetype plugin on
+
+" If you forget to sudo edit something, this can make you sudo inside vim:
+cmap w!! %!sudo tee > /dev/null %
+" cmap w!! w !sudo dd of=%
+
+
+" TESTING GROUNDS:
+
+" Shortcut key for NERDTree
+map <F3> :NERDTreeToggle<Return>
+
+" When editing a file, always jump to the last known cursor position.
+"   " Don't do it when the position is invalid or when inside an event handler
+"     " (happens when dropping a file on gvim).
+autocmd BufReadPost *
+    \ if line(" '\"") > 0 && line("'\"") <= line("$") |
+    \   exe " normal! g`\"" |
+    \ endif
+
+" C-b + H/J/K/L to move between tabs.  Normal Mode only
+nmap <C-b>h :tabfirst<CR>
+nmap <C-b>j :tabprev<CR>
+nmap <C-b>k :tabnext<CR>
+nmap <C-b>l :tablast<CR>
+
+" ,t to open a New tab:
+map ,t :tabnew<CR>    
+" ,n to cycle through open tabs:
+map ,n :tabnext<CR>    
+" ,c to close the current tab:
+map ,c :tabclose<CR>
+" ,q close all tabs if all changes have been saved:
+map ,q :qall<CR>
+" ,wq write and close all tabs:
+map ,wq :wqall<CR>
+
+" Map æ to tab previous and ø to tab next:
+nmap æ gT
+nmap ø gt
+" nnoremap <S-ø> :tabnew
+
+" Disable arrow keys
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+abb cmt # Comment - Entered on ^[:r! date^M-JA
+
+" Nice menu to navigate through possible completions
+set wildmenu
+
+" Insert lines without entering insert modes. j and k makes the cursor stay at
+" the line it was at to begin with.
+map <S-Enter> O<Esc>j
+map <CR> o<Esc>k
+
+" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
+
+" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
+" used in actual words):
+inoremap jj <Esc>l
+
+" Sets the leader character:
+let mapleader = ","
+
+" Open Url on this line with the browser \w
+map <Leader>w :call Browser ()<CR>
+
+" Go directly from insert mode to command mode (:)
+imap ii <C-[>:
+
+
+
+" FUNCTIONS:
+
+" Used in functions to make the call silent. (ie. no "Hit ENTER to Continue"
+command! -nargs=1 Silent
+\ | execute ':silent '.<q-args>
+\ | execute ':redraw!'
+
+function! Browser ()
+   let line = getline (".")
+   let line = matchstr (line, "http[^   ]*")
+   exec "Silent !firefox ".line
+endfunction
+
+
+" Save and load the currently opened windows and files in the current folder.
+nmap <F4> <ESC>:call LoadSession()<CR>
+let s:sessionloaded = 0
+function LoadSession()
+  source Session.vim
+  let s:sessionloaded = 1
+endfunction
+function SaveSession()
+  if s:sessionloaded == 1
+    mksession!
+  end
+endfunction
+autocmd VimLeave * call SaveSession()
+
+
+map <Leader>ck :call C_compile ()<CR>
+map <Leader>cr :call C_compile_run ()<CR>
+
+
+" For coding C:
+
+" Compiles the current program you're inside:
+function! C_compile ()
+	exec "!gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
+endfunction
+
+" Compiles and runs the current program you're inside:
+function! C_compile_run ()
+	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
+	exec "!x/%:t:r"
+endfunction
+
+" GRAVEYARD:
+
+" Makes " u" undo several times instead of just once.
+" All these options set vims compatibility to vi. Arch's default is apparently VERY vi compatible, while this is default:
+" Vim default: " aABceFs",
+" Vi default:  all flags)
+" set cpoptions-=u
+
+" Sets all cpoptoins to vim defaults:
+" set cpoptions=aABceFs
+
+" func BackSpace()
+"  if col('.') == 1
+"    if line('.')  != 1
+"      return  " \<ESC>kA\<Del>"
+"    else
+"      return " "
+"    endif
+"  else
+"    return " \<Left>\<Del>"
+"  endif
+" endfunc
+
+" inoremap <BS> <c-r>=BackSpace()<CR>
+
+" Set the file format (line breaks etc.) to DOS' system, but it doesn't seem to work?
+" set ffs=dos,unix
+"
+"
+" Find some useful key to map : to, to simplify going into command mode:
+" nmap , :
+
