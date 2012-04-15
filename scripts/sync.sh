@@ -28,3 +28,6 @@ cp -r $sh/volume_controls $scripts
 cp $sh/xkcd_get/xkcd.sh $scripts
 cp $sh/backups/conf_backup/conf_backup.sh $scripts
 cp $sh/hibernate.sh $scripts
+
+# security
+sed -i '/sshb/d' $dotfiles/bash.bashrc # -i means it will do the editing in place rather than output to stdout, avoiding some > workaround.
