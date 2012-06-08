@@ -113,7 +113,7 @@ alias ...='cd ../..'
 alias start='sudo /usr/sbin/rc.d start'
 alias stop='sudo /usr/sbin/rc.d stop'
 alias restart='sudo /usr/sbin/rc.d restart'
-alias pdf='apvlv' # could also be mupdf or epdfview
+alias pdf='zathura' # could also be mupdf or epdfview
 alias lynx='lynx -cfg=~/.config/lynx.cfg -vikeys'
 alias irfanview='wine /media/data/Portable/Irfanview/i_view32.exe'
 alias urxvt='urxvtc'
@@ -136,7 +136,7 @@ export vid=/media/data/Video
 export doc=/media/data/Diverse/Dokumenter
 export lnx=/media/data/Diverse/Dokumenter/Computer/Linux
 export xin=/etc/X11/xinit
-export dwm=/home/lys/bin/inst/dwm
+export dwm=/home/lys/bin/inst/dwm/dwm
 export min=/media/data/Diverse/Spil/Minecraft/Survival
 
 # Setting the LANG env to da_DK:

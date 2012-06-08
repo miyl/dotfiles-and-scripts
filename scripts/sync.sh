@@ -12,7 +12,7 @@ cp /etc/vimrc $dotfiles
 cp /etc/X11/xinit/xinitrc $dotfiles
 cp $home/.bashrc $dotfiles
 cp $home/.Xresources $dotfiles
-cp $home/bin/inst/dwm/config.h $dotfiles/dwm/
+cp $home/bin/inst/dwm/dwm/config.h $dotfiles/dwm/
 #cp /home/lys/.pentadactylrc $dotfiles
 
 # scripts/
@@ -30,4 +30,4 @@ cp $sh/backups/conf_backup/conf_backup.sh $scripts
 cp $sh/hibernate.sh $scripts
 
 # security
-sed -i '/sshb/d' $dotfiles/bash.bashrc # -i means it will do the editing in place rather than output to stdout, avoiding some > workaround.
+sed -i '/ssh/d' $dotfiles/bash.bashrc # -i means it will do the editing in place rather than output to stdout, avoiding some > workaround.

@@ -64,6 +64,12 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 
+" Shortcut for NERDTree
+map <F3> :NERDTreeToggle<Return>
+
+" Number nonumber toggle:
+map <F5> :set invnumber<CR>
+
 " Otherwise vim complains when I open some files, even though this is related to pattern matching.
 " set maxmempattern=2000
 
@@ -74,11 +80,43 @@ filetype plugin on
 cmap w!! %!sudo tee > /dev/null %
 " cmap w!! w !sudo dd of=%
 
+" Run python program from inside vim:
+autocmd FileType python map <F6> :!python %<CR>
+
+" Insert lines without entering insert modes. j and k makes the cursor stay at
+" the line it was at to begin with.
+map <S-Enter> O<Esc>j
+map <CR> o<Esc>k
+
+" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
+
+" Sets the leader character:
+let mapleader = ","
+
+" Open Url on this line with the browser \w
+map <Leader>w :call Browser ()<CR>
+
+" Go directly from insert mode to command mode (:)
+imap ii <C-[>:
+
+" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
+" used in actual words):
+inoremap jj <Esc>l
+
+" Disable arrow keys
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+
 
 " TESTING GROUNDS:
 
-" Shortcut key for NERDTree
-map <F3> :NERDTreeToggle<Return>
 
 " When editing a file, always jump to the last known cursor position.
 "   " Don't do it when the position is invalid or when inside an event handler
@@ -110,40 +148,10 @@ nmap æ gT
 nmap ø gt
 " nnoremap <S-ø> :tabnew
 
-" Disable arrow keys
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
-
 abb cmt # Comment - Entered on ^[:r! date^M-JA
 
 " Nice menu to navigate through possible completions
 set wildmenu
-
-" Insert lines without entering insert modes. j and k makes the cursor stay at
-" the line it was at to begin with.
-map <S-Enter> O<Esc>j
-map <CR> o<Esc>k
-
-" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
-
-" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
-" used in actual words):
-inoremap jj <Esc>l
-
-" Sets the leader character:
-let mapleader = ","
-
-" Open Url on this line with the browser \w
-map <Leader>w :call Browser ()<CR>
-
-" Go directly from insert mode to command mode (:)
-imap ii <C-[>:
 
 
 

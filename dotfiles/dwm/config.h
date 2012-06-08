@@ -94,8 +94,12 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,			XK_0,	   spawn,  SHCMD("/home/lys/sh/asoundrc_xchange.sh") },
 	{ 0,							XK_Print,  spawn,  SHCMD("/home/lys/sh/screenshot.sh") },
 	{ 0,							XK_Pause,  spawn,  SHCMD("/home/lys/sh/start_stop.sh") },
+	{ MODKEY,						XK_comma,  spawn,  SHCMD("cmus-remote -r") },
+	{ MODKEY,						XK_period, spawn,  SHCMD("cmus-remote -n") },
+	{ MODKEY|ControlMask,			XK_comma,  spawn,  SHCMD("cmus-remote -k -5") },
+	{ MODKEY|ControlMask,			XK_period, spawn,  SHCMD("cmus-remote -k +5") },
 	{ 0,							XK_Scroll_Lock,		spawn,  SHCMD("/home/lys/sh/monoff.sh") },
-	{ 0,							XK_F11,		spawn,  SHCMD("firefox") },
+/*	{ 0,							XK_F11,		spawn,  SHCMD("firefox") }, */
 	{ 0,							XK_F12,		spawn, SHCMD("urxvtc -e cmus") },
 
 	/* Scratchpad: */

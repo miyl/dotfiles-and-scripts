@@ -154,6 +154,9 @@ Comment
 # More info: http://www.shallowsky.com/linux/x-screen-blanking.html
 xset dpms 0 360 420
 
+# Disables wake on lan:
+ethtool -s eth0 wol d
+
 # Start the urxvt daemon:
 urxvtd --quiet --opendisplay --fork
 

@@ -42,6 +42,10 @@ mkdir usr
   mkdir usr/local
 # mkdir usr/local/bin
   mkdir usr/share
+	mkdir usr/share/kbd
+	  mkdir usr/share/kbd/keymaps
+	    mkdir usr/share/kbd/keymaps/i386
+	      mkdir usr/share/kbd/keymaps/i386/qwerty
 
 # Copy files into those directories.
 
@@ -74,6 +78,10 @@ cp /etc/udev/rules.d/* etc/udev/rules.d/
 # /usr/local/bin
 #cp -r /usr/local/bin/* usr/local/bin/
 
+# /usr/share
+cp -r /usr/share/awesome/ usr/share/
+cp -r /usr/share/kbd/keymaps/i386/qwerty/mydk-latin1.map.gz usr/share/kbd/keymaps/i386/qwerty/
+
 # /home - copy all dotfiles and folders.
 cp -r /$userdir/.[a-zA-Z0-9]* $userdir/dotfile_madness/
 
@@ -83,9 +91,6 @@ cp -r /$userdir/.config/ $userdir/
 cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactyl /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources $userdir/
 cp -r /$userdir/.pentadactyl $userdir/
 
-
-# Awesome
-cp -r /usr/share/awesome/ usr/share/
 
 # END OF FILE BACKUPS
 

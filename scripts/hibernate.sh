@@ -1,6 +1,9 @@
 #! /usr/bin/env bash
 
-xmessage "Hibernating in 15 seconds. Type 'killall hibernate.sh' to cancel."
+PID=`ps aux | grep hibernate.sh | head -n 1 | awk '{ print $2 }'`
+#PID=`pidof hibernate.sh`
+xmessage "Hibernating in 15 seconds. Type 'kill $PID' to cancel."
+#xmessage "Hibernating in 15 seconds. Type 'killall hibernate.sh' to cancel."
 sleep 15
 killall xmessage
 sudo pm-hibernate
