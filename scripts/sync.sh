@@ -17,7 +17,7 @@ cp $home/abs/dwm/dwm/config.h $dotfiles/dwm/
 
 # irssi scripts list:
 # using dir because my ls output is coloured by default, inserting weird meta characters in the file. The -1 part of dir means output one file per line.
-dir -R1 $home/.irssi/scripts | sed -e '/\//d' | tr ' ' '\n' | sort | uniq > $dotfiles/irssi_scripts.txt
+dir -R1 $home/.irssi/scripts | sed -e '/\//d' -e '/autorun/d' | tr ' ' '\n' | sort | uniq > $dotfiles/irssi_scripts.txt
 
 # scripts/
 

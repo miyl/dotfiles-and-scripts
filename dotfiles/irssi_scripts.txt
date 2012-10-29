@@ -1,6 +1,5 @@
 
 adv_windowlist.pl
-autorun
 crapbuster.pl
 hilightwin.pl
 namesaway.pl
