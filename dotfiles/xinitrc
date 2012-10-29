@@ -1,16 +1,14 @@
-#!/bin/sh
 
+
+# Setting the environment:
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
 # merge in defaults and keymaps
-
 if [ -f $sysresources ]; then
-
     xrdb -merge $sysresources
-
 fi
 
 if [ -f $sysmodmap ]; then
@@ -18,49 +16,12 @@ if [ -f $sysmodmap ]; then
 fi
 
 if [ -f "$userresources" ]; then
-
     xrdb -merge "$userresources"
-
 fi
 
 if [ -f "$usermodmap" ]; then
     xmodmap "$usermodmap"
 fi
-
-# start some nice programs
-
-if [ -d /etc/X11/xinit/xinitrc.d ] ; then
-	for f in /etc/X11/xinit/xinitrc.d/* ; do
-		[ -x "$f" ] && . "$f"
-	done
-	unset f
-fi
-
-
-# Autocutsel syncronisation between primary selection and the clipboard.
-
-if [ -x /usr/bin/autocutsel ]; then
-    #this will keep the clipboard in sync
-    #   with the primary buffer
-    autocutsel -selection CLIPBOARD -fork
-
-    #this will keep the primary in sync
-    #   with the clipboard buffer
-    autocutsel -selection PRIMARY -fork
-fi
-
-# Enable Terminus & artwiz in Arch ( / dwm ):
-xset +fp /usr/share/fonts/local
-xset +fp /usr/share/fonts/artwiz-fonts
-xset fp rehash
-
-# dwm:
-
-# - Set background image:
-#feh --bg-scale /media/data/Video/Billeder/BGs/dwm_bg2.png &
-# feh --bg-center /media/data/Video/Billeder/BGs/twilight-sparkle.png &
-# /home/lys/bin/astronomy_potd_wallpaper.sh
-feh --bg-center /media/data/Video/Billeder/BGs/Arch\ Linux\ Wallpaper\ by\ james66.jpg
 
 
 
@@ -69,7 +30,7 @@ feh --bg-center /media/data/Video/Billeder/BGs/Arch\ Linux\ Wallpaper\ by\ james
 
 #!/bin/sh
 #eval "$(gpg-agent --daemon)"
-#display -window root repo/dwm/dwm.png 
+#display -window root repo/dwm/dwm.png
 #xsetroot -solid black
 
 wifi(){
@@ -79,7 +40,7 @@ wifi(){
 #        LINK="`awk '/wlan0:/ {print $3}' /proc/net/wireless |sed -e 's/\.//g'`"
       echo " $ESSID"
       fi
-    } 
+    }
 
 batt(){
       FULL=`cat /sys/class/power_supply/BAT1/charge_full`
@@ -95,8 +56,8 @@ batt(){
           SIGN="+";;
         Discharging)
           SIGN="-";;
-		Unknown)
-		  SIGN="?";;
+                Unknown)
+                  SIGN="?";;
       esac
       echo "Bat: ${CHARGE}${SIGN}"
     else
@@ -105,11 +66,11 @@ batt(){
     }
 
 volume(){ #changed -c 0 to -c Intel, so no matter which number it gets it will be uniquely identifiable this way, to prevent errors.
-        echo "Vol: `/usr/bin/amixer -c Intel get Master |awk '/Mono/{print $4}' | sed -e 's/\[//g' -e 's/\]//g' -e '/./!d'`"
+        echo "Vol: `/usr/bin/amixer -c Intel get Master | awk '/Mono/{print $4}' | tr -d \"[]\n\"`"
     }
 
 cmusstats(){
-      if test "X`pgrep cmus`" != "X" ; then 
+      if test "X`pgrep cmus`" != "X" ; then
         TIME="`cmus-remote -Q |awk '/duration/ {print $2}'`"
         CURR="`cmus-remote -Q |awk '/position/ {print $2}'`"
         ARTIST="`cmus-remote -Q |sed -ne '/artist/s/tag artist //pg'`"
@@ -119,43 +80,54 @@ cmusstats(){
     }
 
 while true; do
-  xsetroot -name "`cmusstats``wifi` `volume` `batt` `date +'%d/%m %H:%M'`"
+  xsetroot -name "`cmusstats` `volume` `batt` `date +'%d/%m %H:%M'`"
   if [ `acpi | awk -F'[ %]*' '{print $4}'` -lt 7 ] && [ `acpi | awk '{print $3}'` = "Discharging," ]; then
-	~/sh/hibernate.sh
+        ~/sh/hibernate.sh
   fi
   sleep 10
 done &
 
+# Removed the wifi part. Here's the original:
+#  xsetroot -name "`cmusstats``wifi` `volume` `batt` `date +'%d/%m %H:%M'`"
 
 
 
 
+# Set keyboard layout to danish. Probably suboptimal, but it works.
+setxkbmap dk
 
-<< Comment
-while true
-do
 
-	if [ `acpi | awk -F'[, %\t]*' '{print $4}'` -gt 10 ]; then
-    	xsetroot -name "$(acpi | awk -F'[, \t]*' '{print $4}') - $(date +"%d/%m/%Y %H:%M")" 
-    	sleep 5 
-	elif [ `acpi | awk -F'[, %\t]*' '{print $4}'` -gt 5 ]; then
-    	xmessage -center -buttons "OK:0" "Your battery is
-		low!"
-		xsetroot -name "$(acpi | awk -F'[, \t]*' '{print $4}') - $(date +"%d/%m/%Y %H:%M")" 
-    	sleep 5
-	else
-		sudo pm-hibernate
-	fi
-done &
+# Autocutsel syncronisation between primary selection and the clipboard.
 
-Comment
+if [ -x /usr/bin/autocutsel ]; then
+    #this will keep the clipboard in sync
+    #   with the primary buffer
+    autocutsel -selection CLIPBOARD -fork
+
+    #this will keep the primary in sync
+    #   with the clipboard buffer
+    autocutsel -selection PRIMARY -fork
+fi
+
+
+# Enable Terminus & artwiz in Arch ( / dwm ):
+xset +fp /usr/share/fonts/local
+xset +fp /usr/share/fonts/artwiz-fonts
+xset fp rehash
+
+# - Set background image:
+#feh --bg-scale /media/data/Video/Billeder/BGs/dwm_bg2.png &
+# feh --bg-center /media/data/Video/Billeder/BGs/twilight-sparkle.png &
+# /home/lys/bin/astronomy_potd_wallpaper.sh
+# feh --bg-center /media/data/Video/Billeder/BGs/Arch\ Linux\ Wallpaper\ by\ james66.jpg
+feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse.png
 
 # Disables screen blanking (0), suspends the screen after 6 minutes and then turns it off after 7.
 # More info: http://www.shallowsky.com/linux/x-screen-blanking.html
 xset dpms 0 360 420
 
 # Disables wake on lan:
-ethtool -s eth0 wol d
+#ethtool -s eth0 wol d
 
 # Start the urxvt daemon:
 urxvtd --quiet --opendisplay --fork
@@ -163,14 +135,7 @@ urxvtd --quiet --opendisplay --fork
 # Boot numlock on:
 numlockx &
 
-#twm &
-#xclock -geometry 50x50-1+1 &
-#xterm -geometry 80x50+494+51 &
-#xterm -geometry 80x20+494-0 &
-#exec xterm -geometry 80x66+0+0 -name login
-exec /usr/bin/xscreensaver -no-splash &
+# Unclutter, hiding the cursor after some seconds of inactivity.
 exec unclutter -root &
-#exec awesome
-exec /home/lys/sh/startdwm.sh
-#exec tinywm
-#exec dwm
+
+exec dwm

@@ -1,0 +1,12 @@
+
+adv_windowlist.pl
+autorun
+crapbuster.pl
+hilightwin.pl
+namesaway.pl
+nickcolor.pl
+nm.pl
+printlevels.pl
+screen_away.pl
+splitlong.pl
+trackbar.pl

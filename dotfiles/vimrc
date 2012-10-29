@@ -1,3 +1,9 @@
+if has('gui_running')
+  " Make shift-insert work like in Xterm
+  map <S-Insert> <MiddleMouse>
+  map! <S-Insert> <MiddleMouse>
+endif
+
 " Enables syntax hilighting:
 syntax on
 
@@ -14,7 +20,7 @@ set nohidden
 set backspace=indent,eol,start
 
 " Set the file encoding to utf8:
-set fileencoding=utf8
+set fileencoding=utf-8
 set encoding=utf-8
 
 " Should enforce mouse copying and pasting capabilities:
