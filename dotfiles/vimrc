@@ -20,8 +20,17 @@ set nohidden
 set backspace=indent,eol,start
 
 " Set the file encoding to utf8:
-set fileencoding=utf-8
-set encoding=utf-8
+if has("multi_byte")
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
+  set encoding=utf-8                     " better default than latin1
+  setglobal fileencoding=utf-8           " change default file encoding when writing new files
+  "setglobal bomb                        " use a BOM when writing new files
+  set fileencodings=ucs-bom,utf-8,latin1 " order to check for encodings when reading files
+endif
+" Source:
+"http://stackoverflow.com/questions/5477565/how-to-setup-vim-properly-for-editing-in-utf-8
 
 " Should enforce mouse copying and pasting capabilities:
 set mouse=a
