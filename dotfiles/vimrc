@@ -1,3 +1,46 @@
+"Vundle:
+
+" Turns off strict vi compatibility:
+set nocompatible
+
+"Don't use the detect file type plugin:
+filetype off                   " required!
+
+" Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
+" filetype plugin on
+
+set rtp+=/home/lys/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'gmarik/vundle'
+Bundle 'delimitMate.vim'
+Bundle 'EasyMotion'
+Bundle 'Syntastic'
+Bundle 'The-NERD-Commenter'
+Bundle 'The-NERD-tree'
+Bundle 'ZenCoding.vim'
+Bundle 'vim-surround'
+Bundle 'SirVer/ultisnips'
+"Bundle 'snipMate'
+"Bundle 'snipmate-snippets'
+
+filetype plugin indent on     " required!  
+
+
+" -----------------------------------------------------------
+
+" Ultisnips
+
+let g:UltiSnipsListSnippets="<Leader><tab>"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+
+" -----------------------------------------------------------
+
 if has('gui_running')
   " Make shift-insert work like in Xterm
   map <S-Insert> <MiddleMouse>
@@ -9,9 +52,6 @@ syntax on
 
 " Sets the colorscheme to Zenburn:
 colorscheme zenburn
-
-" Turns off strict vi compatibility:
-set nocp
 
 " When I close a tab, remove the buffer
 set nohidden
@@ -45,9 +85,8 @@ set clipboard=unnamedplus
 set ignorecase
 set smartcase
 
-" TESTING: Match /searches as typed (saves time)
+" Match /searches as typed (saves time)
 set incsearch
-
 
 " Tabstop: Sets how many spaces a manually inserted tab consists of.
 " Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
@@ -56,7 +95,7 @@ set incsearch
 " Softtabstop:
 set tabstop=4
 set shiftwidth=4
-set noexpandtab
+set expandtab
 set softtabstop=4
 
 " Keep a newline at the same level as the current indentation.
@@ -79,6 +118,13 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 
+
+" -----------------------------------------------------------
+
+
+" MAPPINGS:
+
+
 " Shortcut for NERDTree
 map <F3> :NERDTreeToggle<Return>
 
@@ -88,9 +134,6 @@ map <F5> :set invnumber<CR>
 " Otherwise vim complains when I open some files, even though this is related to pattern matching.
 " set maxmempattern=2000
 
-" Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
-filetype plugin on
-
 " If you forget to sudo edit something, this can make you sudo inside vim:
 cmap w!! %!sudo tee > /dev/null %
 " cmap w!! w !sudo dd of=%
@@ -98,7 +141,7 @@ cmap w!! %!sudo tee > /dev/null %
 " Run python program from inside vim:
 autocmd FileType python map <F6> :!python %<CR>
 
-" Insert lines without entering insert modes. j and k makes the cursor stay at
+" Insert newlines without entering insert modes. j and k makes the cursor stay at
 " the line it was at to begin with.
 map <S-Enter> O<Esc>j
 map <CR> o<Esc>k
@@ -128,9 +171,32 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
+" ,t to open a New tab:
+map <Leader>t :tabnew<CR>    
+" ,n to cycle through open tabs:
+map <Leader>n :tabnext<CR>    
+" ,c to close the current tab:
+map <Leader>c :tabclose<CR>
+" ,q close all tabs if all changes have been saved:
+map <Leader>q :qall<CR>
+" ,wq write and close all tabs:
+map <Leader>wq :wqall<CR>
+
+" Map æ to tab previous and ø to tab next:
+nmap æ gT
+nmap ø gt
+" nnoremap <S-ø> :tabnew
+
+" CTRL-N for word completion is too weird. Maybe this is a little bit better?:
+imap ½½ <C-n>
 
 
-" TESTING GROUNDS:
+
+" Abbreviations:
+" Typing cmt is automatically expanded to this:
+abb cmt # Comment - Entered on :r! date-JA
+cabb what tabe /home/lys/linux/vim.txt
+
 
 
 " When editing a file, always jump to the last known cursor position.
@@ -141,32 +207,15 @@ autocmd BufReadPost *
     \   exe " normal! g`\"" |
     \ endif
 
-" C-b + H/J/K/L to move between tabs.  Normal Mode only
-nmap <C-b>h :tabfirst<CR>
-nmap <C-b>j :tabprev<CR>
-nmap <C-b>k :tabnext<CR>
-nmap <C-b>l :tablast<CR>
-
-" ,t to open a New tab:
-map ,t :tabnew<CR>    
-" ,n to cycle through open tabs:
-map ,n :tabnext<CR>    
-" ,c to close the current tab:
-map ,c :tabclose<CR>
-" ,q close all tabs if all changes have been saved:
-map ,q :qall<CR>
-" ,wq write and close all tabs:
-map ,wq :wqall<CR>
-
-" Map æ to tab previous and ø to tab next:
-nmap æ gT
-nmap ø gt
-" nnoremap <S-ø> :tabnew
-
-abb cmt # Comment - Entered on ^[:r! date^M-JA
-
 " Nice menu to navigate through possible completions
 set wildmenu
+" On tab press 1: Complete as much as possible, on 2: show a list of completions, on 3: cycle through all available completions.
+set wildmode=longest,list,full
+
+" Sort CSS properties
+nnoremap <leader>s ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
+
+
 
 
 
@@ -186,6 +235,7 @@ endfunction
 
 " Save and load the currently opened windows and files in the current folder.
 nmap <F4> <ESC>:call LoadSession()<CR>
+
 let s:sessionloaded = 0
 function LoadSession()
   source Session.vim
@@ -199,11 +249,10 @@ endfunction
 autocmd VimLeave * call SaveSession()
 
 
+" For coding C:
+
 map <Leader>ck :call C_compile ()<CR>
 map <Leader>cr :call C_compile_run ()<CR>
-
-
-" For coding C:
 
 " Compiles the current program you're inside:
 function! C_compile ()
@@ -216,35 +265,11 @@ function! C_compile_run ()
 	exec "!x/%:t:r"
 endfunction
 
+
+
+
+
+
+
+
 " GRAVEYARD:
-
-" Makes " u" undo several times instead of just once.
-" All these options set vims compatibility to vi. Arch's default is apparently VERY vi compatible, while this is default:
-" Vim default: " aABceFs",
-" Vi default:  all flags)
-" set cpoptions-=u
-
-" Sets all cpoptoins to vim defaults:
-" set cpoptions=aABceFs
-
-" func BackSpace()
-"  if col('.') == 1
-"    if line('.')  != 1
-"      return  " \<ESC>kA\<Del>"
-"    else
-"      return " "
-"    endif
-"  else
-"    return " \<Left>\<Del>"
-"  endif
-" endfunc
-
-" inoremap <BS> <c-r>=BackSpace()<CR>
-
-" Set the file format (line breaks etc.) to DOS' system, but it doesn't seem to work?
-" set ffs=dos,unix
-"
-"
-" Find some useful key to map : to, to simplify going into command mode:
-" nmap , :
-

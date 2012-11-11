@@ -232,3 +232,8 @@ else
 echo -e ${YELLOW}"'$1' is an invalid file"${RESET}
     fi
 }
+
+function sim()
+{
+    sudoedit "$*"
+}
