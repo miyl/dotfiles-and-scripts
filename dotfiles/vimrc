@@ -1,4 +1,24 @@
-"Vundle:
+" All system-wide defaults are set in $VIMRUNTIME/archlinux.vim (usually just
+" /usr/share/vim/vimfiles/archlinux.vim) and sourced by the call to :runtime
+" you can find below.  If you wish to change any of those settings, you should
+" do it in this file (/etc/vimrc), since archlinux.vim will be overwritten
+" everytime an upgrade of the vim packages is performed.  It is recommended to
+" make changes after sourcing archlinux.vim since it alters the value of the
+" 'compatible' option.
+
+" This line should not be removed as it ensures that various options are
+" properly set to work with the Vim-related packages.
+runtime! archlinux.vim
+
+" If you prefer the old-style vim functionalty, add 'runtime! vimrc_example.vim'
+" Or better yet, read /usr/share/vim/vim73/vimrc_example.vim or the vim manual
+" and configure vim to your own liking!
+
+
+
+
+
+" Vundle
 
 " Turns off strict vi compatibility:
 set nocompatible
@@ -21,11 +41,9 @@ Bundle 'Syntastic'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'ZenCoding.vim'
-Bundle 'vim-surround'
+Bundle 'tpope/vim-surround'
 Bundle 'SirVer/ultisnips'
-"Bundle 'snipMate'
-"Bundle 'snipmate-snippets'
-
+Bundle 'Valloric/MatchTagAlways'
 filetype plugin indent on     " required!  
 
 
@@ -41,6 +59,19 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 " -----------------------------------------------------------
 
+" Match Always
+"
+let g:mta_filetypes = {
+    \ 'html' : 1,
+    \ 'xhtml' : 1,
+    \ 'xml' : 1,
+    \ 'jinja' : 1,
+    \ 'php' : 1,
+    \}
+
+
+" -----------------------------------------------------------
+
 if has('gui_running')
   " Make shift-insert work like in Xterm
   map <S-Insert> <MiddleMouse>
@@ -50,8 +81,9 @@ endif
 " Enables syntax hilighting:
 syntax on
 
-" Sets the colorscheme to Zenburn:
-colorscheme zenburn
+" Sets the colorscheme to Zenburn <3 
+" Alternatives would be railcasts or distinguished.
+colorscheme distinguished
 
 " When I close a tab, remove the buffer
 set nohidden
@@ -264,7 +296,6 @@ function! C_compile_run ()
 	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
 	exec "!x/%:t:r"
 endfunction
-
 
 
 

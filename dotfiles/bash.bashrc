@@ -136,14 +136,15 @@ alias ls='ls --color --group-directories-first'
 # $PATH means first take the current content of PATH then append the following.
 export PATH=$PATH:/home/lys/bin
 #export dja='cd /media/data/Video/Egne/www/Django/'
-export dja=/media/data/Video/Egne/www/Django
-export aud=/media/data/Audio
-export vid=/media/data/Video
-export doc=/media/data/Diverse/Dokumenter
-export lnx=/media/data/Diverse/Dokumenter/Computer/Linux
-export xin=/etc/X11/xinit
-export dwm=/home/lys/bin/inst/dwm/dwm
-export min=/media/data/Diverse/Spil/Minecraft/Survival
+export www=/media/data/Video/Egne/www/
+export dja=/media/data/Video/Egne/www/django/
+export aud=/media/data/Audio/
+export vid=/media/data/Video/
+export doc=/media/data/Diverse/Dokumenter/
+export lnx=/media/data/Diverse/Dokumenter/Computer/Linux/
+export xin=/etc/X11/xinit/
+export dwm=/home/lys/bin/inst/dwm/dwm/
+export min=/media/data/Diverse/Spil/Minecraft/Survival/
 
 # Setting the LANG env to da_DK:
 #export LANG='da_DK.UTF-8'
