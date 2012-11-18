@@ -35,6 +35,10 @@ cp $sh/hibernate.sh $scripts
 cp $sh/start_stop.sh $scripts
 cp $sh/screenshot.sh $scripts
 
+#web
+cp $home/www/lys/index.html .
+cp $home/www/lys/css.css .
+
 # security
 
 sed -i '/ssh/d' $dotfiles/bash.bashrc # -i means it will do the editing in place rather than output to stdout, avoiding some > workaround.
