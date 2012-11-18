@@ -27,6 +27,10 @@ p {
     margin-bottom: 0px;
     padding: 0px;}
 
+strong {
+    display: block;
+    margin-top: 10px;}
+
 footer {
     clear: both;
     padding-top: 20px;}
@@ -42,13 +46,6 @@ footer {
 
 .colorise {
     color: #dcffab;}
-
-.comment {
-    font-style: italic;
-    margin: 0px;}
-
-.emphasis {
-    font-weight: bold;}
 
 .hilight {
     border-style: solid;
