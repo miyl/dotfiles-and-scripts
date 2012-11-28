@@ -36,8 +36,8 @@ cp $sh/start_stop.sh $scripts
 cp $sh/screenshot.sh $scripts
 
 #web
-cp $home/www/lys/index.html .
-cp $home/www/lys/css.css .
+cp $home/www/lys/index.html upload/
+cp $home/www/lys/css.css upload/
 
 # security
 

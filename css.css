@@ -23,7 +23,12 @@ h2 {
 }
 
 li {
-	color: #dcffab;}
+	color: #dcffab;
+}
+
+.white {
+    color: #fff;
+}
 
 p {
     max-width: 750px;
@@ -67,6 +72,3 @@ footer {
 .subtitle {
     font-style: italic;
     color: #dc8cc3;}
-
-.white {
-	color: #fff;}

@@ -123,6 +123,7 @@ alias pdf='zathura' # could also be mupdf or epdfview
 alias lynx='lynx -cfg=~/.config/lynx.cfg -vikeys'
 alias irfanview='wine /media/data/Portable/Irfanview/i_view32.exe'
 alias urxvt='urxvtc'
+alias mount='mount -o uid=lys'
 
 # - - Django:
 alias runserver='python2.7 manage.py runserver'
@@ -131,6 +132,12 @@ alias syncdb='python2.7 manage.py syncdb'
 # Make ls's default output coloured and group directories first in listnings:
 # Symlinked directories, however, are unfortunately not.
 alias ls='ls --color --group-directories-first' 
+
+# Make find case insensitive by default.
+#alias find='find -iname'
+
+# Make grep case insensitive by default.
+alias grep='grep -i'
 
 # - Envs: 
 # $PATH means first take the current content of PATH then append the following.
@@ -161,6 +168,10 @@ esac
 if [[ -z $DISPLAY && ! -a /tmp/.X11-unix/X0 && $(id -u) != 0 ]]; then
   exec startx
 fi
+
+# Autocompletion when typing sudo x or man x.
+complete -cf sudo
+complete -cf man
 
 # {{{ Pacman & Yaourt
 	alias pa="pacman"
