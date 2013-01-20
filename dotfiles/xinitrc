@@ -121,7 +121,8 @@ xset fp rehash
 # /home/lys/bin/astronomy_potd_wallpaper.sh
 # feh --bg-center /media/data/Video/Billeder/BGs/Arch\ Linux\ Wallpaper\ by\ james66.jpg
 #feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse.png
-feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse_v2.png
+#feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse_v2.png
+feh --bg-center /media/data/Video/Billeder/BGs/friendship-is-magic-fanart.png
 
 # Disables screen blanking (0), suspends the screen after 6 minutes and then turns it off after 7.
 # More info: http://www.shallowsky.com/linux/x-screen-blanking.html

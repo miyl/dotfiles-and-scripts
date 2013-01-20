@@ -7,5 +7,6 @@ then
 cmus-remote -u
 else
 # VLC:
-echo -n "pause" | nc.openbsd -U /home/lys/bin/vlc.sock 2>/dev/null
+#echo -n "pause" | nc.openbsd -U /home/lys/bin/vlc.sock 2>/dev/null
+echo -n "pause" | nc -U /home/lys/bin/vlc.sock 2>/dev/null
 fi

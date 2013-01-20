@@ -124,6 +124,7 @@ alias lynx='lynx -cfg=~/.config/lynx.cfg -vikeys'
 alias irfanview='wine /media/data/Portable/Irfanview/i_view32.exe'
 alias urxvt='urxvtc'
 alias mount='mount -o uid=lys'
+alias smx='mount -o uid=lys /dev/sdb1 /media/x'
 
 # - - Django:
 alias runserver='python2.7 manage.py runserver'

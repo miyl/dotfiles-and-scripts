@@ -10,6 +10,8 @@
 " properly set to work with the Vim-related packages.
 runtime! archlinux.vim
 
+filetype plugin indent on
+
 " If you prefer the old-style vim functionalty, add 'runtime! vimrc_example.vim'
 " Or better yet, read /usr/share/vim/vim73/vimrc_example.vim or the vim manual
 " and configure vim to your own liking!
@@ -37,17 +39,26 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'delimitMate.vim'
 Bundle 'EasyMotion'
-Bundle 'Syntastic'
+"Bundle 'Syntastic'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'ZenCoding.vim'
 Bundle 'tpope/vim-surround'
 Bundle 'SirVer/ultisnips'
 Bundle 'Valloric/MatchTagAlways'
-filetype plugin indent on     " required!  
+" Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
+" Consider the Command-T plugin, which navigates files easily.
+" Bundle 'wincent/Command-T'
 
-
-" -----------------------------------------------------------
+" Vundle: The plugin handler itself, keeps them updated when run manually once in a while.
+" DelimitMate: Add things like two quotes immediately when writing one pair of them.
+" EasyMotion: Navigate more effectively inside vim, with link-follow-like functionality.
+" Syntastic: Check syntax inside vim.
+" The-NERD-Commenter: Comment in or out text easily.                                                   filetype plugin indent on           " required!  
+" The-NERD-tree: File tree directly inside vim.
+" ZenCoding: Various coding shortcuts.
+" Surround: Surround text, lines, words, whatever with quotes or tags (typically, at least). " -----------------------------------------------------------
+" Ultisnips: Snippets.
 
 " Ultisnips
 
@@ -226,9 +237,8 @@ imap ½½ <C-n>
 
 " Abbreviations:
 " Typing cmt is automatically expanded to this:
-abb cmt # Comment - Entered on :r! date-JA
+abb cmt # Comment - Entered on :r! date-JA by lys
 cabb what tabe /home/lys/linux/vim.txt
-
 
 
 " When editing a file, always jump to the last known cursor position.
@@ -299,7 +309,19 @@ endfunction
 
 
 
+" TESTING GROUNDS
+"
+function! ClearAllButMatches()
+    let old = @c
+    let @c=""
+    %s//\=setreg('C', submatch(0), 'l')/g
+    %d _
+    put c
+    0d _
+    let @c = old
+endfunction
 
+map <Leader>f :call ClearAllButMatches ()<CR>
 
 
 " GRAVEYARD:

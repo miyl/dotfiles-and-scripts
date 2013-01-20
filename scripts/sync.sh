@@ -12,7 +12,7 @@ cp /etc/vimrc $dotfiles
 cp /etc/X11/xinit/xinitrc $dotfiles
 cp $home/.bashrc $dotfiles
 cp $home/.Xresources $dotfiles
-cp $home/abs/dwm/dwm/config.h $dotfiles/dwm/
+cp $home/abs/dwm/dwm/src/dwm-6.0/config.h $dotfiles/dwm/
 #cp /home/lys/.pentadactylrc $dotfiles
 
 # irssi scripts list:

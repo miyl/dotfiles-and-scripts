@@ -41,9 +41,9 @@ static const Layout layouts[] = {
 };
 
 /* Scratchpad: */
-/* static const char scratchpadname[] = "Scratchpad"; /* make it unique, avoid name collision */
-/* static const char *scratchpadcmd[] = { "urxvtc", "-title", scratchpadname, "-geometry", "80x20", "-bg", "#333", "-bd", "pink", NULL }; /* WM_NAME must be scratchpadname */
-/* static const char *scratchpadcmd2[] = { "urxvtc", "-title", scratchpadname, "-geometry", "80x20", "-bg", "#333", "-bd", "pink", "-e", "vim", "/home/lys/txt/a.txt", NULL }; /* WM_NAME must be scratchpadname */
+static const char scratchpadname[] = "Scratchpad"; /* make it unique, avoid name collision */
+static const char *scratchpadcmd[] = { "urxvtc", "-title", scratchpadname, "-geometry", "80x20", "-bg", "#333", "-bd", "pink", NULL }; /* WM_NAME must be scratchpadname */
+static const char *scratchpadcmd2[] = { "urxvtc", "-title", scratchpadname, "-geometry", "80x20", "-bg", "#333", "-bd", "pink", "-e", "vim", "/home/lys/txt/a.txt", NULL }; /* WM_NAME must be scratchpadname */
 
 /* key definitions */
 #define MODKEY Mod4Mask
@@ -58,7 +58,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "urxvtc", NULL };
+static const char *termcmd[]  = { "urxvtc -fade 25", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -103,9 +103,9 @@ static Key keys[] = {
 	{ 0,							XK_F12,		spawn, SHCMD("urxvtc -e cmus") },
 
 	/* Scratchpad: */
-/*	{ MODKEY|ControlMask, 			XK_ae,	   spawn, 			{.v = scratchpadcmd } }, /* for more scratchpads */
-/*	{ MODKEY, 						XK_ae,     togglescratchpad,{.v = scratchpadcmd } },
-/*	{ MODKEY, 						XK_oslash, togglescratchpad,{.v = scratchpadcmd2 } }, */
+	{ MODKEY|ControlMask, 			XK_ae,	   spawn, 			{.v = scratchpadcmd } }, /* for more scratchpads */
+	{ MODKEY, 						XK_ae,     togglescratchpad,{.v = scratchpadcmd } },
+	{ MODKEY, 						XK_oslash, togglescratchpad,{.v = scratchpadcmd2 } },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
