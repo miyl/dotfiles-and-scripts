@@ -105,7 +105,6 @@ fi
 # Lys:
 
 # - Aliases:
-alias grep="grep --color=always"
 alias ll='ls -lh'
 alias la='ls -Ah'
 alias t='/home/lys/sh/todo/todo.sh -d /home/lys/sh/todo/todo.cfg'
@@ -138,7 +137,7 @@ alias ls='ls --color --group-directories-first'
 #alias find='find -iname'
 
 # Make grep case insensitive by default.
-alias grep='grep -i'
+alias grep='grep -i --color=always'
 
 # - Envs: 
 # $PATH means first take the current content of PATH then append the following.

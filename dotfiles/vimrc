@@ -185,9 +185,9 @@ cmap w!! %!sudo tee > /dev/null %
 autocmd FileType python map <F6> :!python %<CR>
 
 " Insert newlines without entering insert modes. j and k makes the cursor stay at
-" the line it was at to begin with.
-map <S-Enter> O<Esc>j
-map <CR> o<Esc>k
+" the line it was at to begin with. S-Enter does not work currently.
+nmap <S-Enter> O<Esc>j
+nmap <CR> o<Esc>k
 
 " More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
 

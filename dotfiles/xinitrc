@@ -57,7 +57,7 @@ batt(){
         Discharging)
           SIGN="-";;
                 Unknown)
-                  SIGN="?";;
+                  SIGN=" AC";;
       esac
       echo "Bat: ${CHARGE}${SIGN}"
     else
