@@ -86,6 +86,10 @@ em {
     margin-top: 10px;
 }
 
+.noblock {
+    display: inline;
+}
+
 /* Border top and bottom */
 footer { 
     border-top: 3px dotted #dc8cc3;
