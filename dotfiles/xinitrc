@@ -82,7 +82,7 @@ cmusstats(){
 while true; do
   xsetroot -name "`cmusstats` `volume` `batt` `date +'%d/%m %H:%M'`"
   if [ `acpi | awk -F'[ %]*' '{print $4}'` -lt 7 ] && [ `acpi | awk '{print $3}'` = "Discharging," ]; then
-        ~/sh/hibernate.sh
+        /home/lys/sh/hibernate.sh
   fi
   sleep 10
 done &

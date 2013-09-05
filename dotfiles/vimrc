@@ -46,6 +46,7 @@ Bundle 'ZenCoding.vim'
 Bundle 'tpope/vim-surround'
 Bundle 'SirVer/ultisnips'
 Bundle 'Valloric/MatchTagAlways'
+Bundle 'scrooloose/syntastic'
 " Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
 " Consider the Command-T plugin, which navigates files easily.
 " Bundle 'wincent/Command-T'
@@ -101,6 +102,8 @@ set nohidden
 
 " Makes the BackSpace-button work:
 set backspace=indent,eol,start
+
+set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
 
 " Set the file encoding to utf8:
 if has("multi_byte")
@@ -204,6 +207,9 @@ imap ii <C-[>:
 " used in actual words):
 inoremap jj <Esc>l
 
+" Save easier - experiment:
+inoremap hh <Esc>:w<CR>
+
 " Disable arrow keys
 map <up> <nop>
 map <down> <nop>
@@ -233,12 +239,14 @@ nmap ø gt
 " CTRL-N for word completion is too weird. Maybe this is a little bit better?:
 imap ½½ <C-n>
 
+" Easier saving
+nmap we :w<Enter>
 
 
 " Abbreviations:
 " Typing cmt is automatically expanded to this:
 abb cmt # Comment - Entered on :r! date-JA by lys
-cabb what tabe /home/lys/linux/vim.txt
+cabb what tabe /home/lys/linux/vim/basics.txt
 
 
 " When editing a file, always jump to the last known cursor position.
@@ -277,13 +285,26 @@ endfunction
 " Save and load the currently opened windows and files in the current folder.
 nmap <F4> <ESC>:call LoadSession()<CR>
 
+" I started with a project of saving sessions globally somewhere, and
+" generating the name on the basis of a hash of the directory, reduced to
+" maybe 6 characters. Then it will perform this same hash when trying to load
+" the file. If a file is found with that hash, then load it.
+" This will also automatically overwrite sessions existing for the current
+" directory. If necessary a separate file with the working dir could be
+" created, mainly for the purpose of getting an overview of what projects are
+" saved in the directory. I'm thinking of using md5.
+
+"let name = 
+
 let s:sessionloaded = 0
 function LoadSession()
+"  source ~/.vimsessions/Session.vim
   source Session.vim
   let s:sessionloaded = 1
 endfunction
 function SaveSession()
   if s:sessionloaded == 1
+"    mksession! ~/.vimsessions/
     mksession!
   end
 endfunction
