@@ -37,7 +37,7 @@ mkdir etc
     mkdir etc/X11/xinit
 mkdir home
   mkdir home/$username
-  mkdir $userdir/dotfile_madness
+#  mkdir $userdir/dotfile_madness    - crazy space consuming, and lots of junk.
 mkdir usr
   mkdir usr/local
 # mkdir usr/local/bin
@@ -83,14 +83,14 @@ cp -r /usr/share/awesome/ usr/share/
 cp -r /usr/share/kbd/keymaps/i386/qwerty/mydk-latin1.map.gz usr/share/kbd/keymaps/i386/qwerty/
 
 # /home - copy all dotfiles and folders.
-cp -r /$userdir/.[a-zA-Z0-9]* $userdir/dotfile_madness/
+#cp -r /$userdir/.[a-zA-Z0-9]* $userdir/dotfile_madness/
 
 # /home
 cp -r /$userdir/bin/ $userdir/
 cp -r /$userdir/.config/ $userdir/
 cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactyl /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources $userdir/
 cp -r /$userdir/.pentadactyl $userdir/
-
+cp -r /$userdir/.gitignore_global $userdir/
 
 # END OF FILE BACKUPS
 
