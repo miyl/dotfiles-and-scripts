@@ -10,7 +10,7 @@ home=/home/lys
 cp /etc/bash.bashrc $dotfiles
 cp /etc/vimrc $dotfiles
 cp /etc/X11/xinit/xinitrc $dotfiles
-cp $home/.bashrc $dotfiles
+#cp $home/.bashrc $dotfiles    # I'm not really using it anyway.
 cp $home/.Xresources $dotfiles
 cp $home/abs/dwm/dwm/src/dwm-6.0/config.h $dotfiles/dwm/
 #cp /home/lys/.pentadactylrc $dotfiles

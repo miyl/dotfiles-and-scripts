@@ -126,7 +126,7 @@ alias mount='mount -o uid=lys'
 alias smx='sudo mount -o uid=lys /dev/sdb1 /media/x'
 alias smxc='sudo mount -o uid=lys /dev/sdb1 /media/x && cd /media/x'
 alias rn='restart network'
-alias mosml='rlwrap mosml'
+alias mosml='rlwrap mosml -P full'
 
 # - - Django:
 alias runserver='python2.7 manage.py runserver'
@@ -207,6 +207,9 @@ complete -cf man
 # share history across all terminals
 shopt -s histappend
 PROMPT_COMMAND='history -a'
+
+# Autojump:
+[[ -s /etc/profile.d/autojump.bash ]] && . /etc/profile.d/autojump.bash
 
 #Functions
 

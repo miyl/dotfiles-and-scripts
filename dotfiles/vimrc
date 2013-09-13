@@ -16,14 +16,9 @@ filetype plugin indent on
 " Or better yet, read /usr/share/vim/vim73/vimrc_example.vim or the vim manual
 " and configure vim to your own liking!
 
-
-
-
-
 " Vundle
 
-" Turns off strict vi compatibility:
-set nocompatible
+set nocompatible " Turns off strict vi compatibility:
 
 "Don't use the detect file type plugin:
 filetype off                   " required!
@@ -37,16 +32,17 @@ call vundle#rc()
 " let Vundle manage Vundle
 " required! 
 Bundle 'gmarik/vundle'
+
 Bundle 'delimitMate.vim'
-Bundle 'EasyMotion'
-"Bundle 'Syntastic'
-Bundle 'The-NERD-Commenter'
-Bundle 'The-NERD-tree'
-Bundle 'ZenCoding.vim'
-Bundle 'tpope/vim-surround'
-Bundle 'SirVer/ultisnips'
-Bundle 'Valloric/MatchTagAlways'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'SirVer/ultisnips'
+Bundle 'tpope/vim-surround'
+Bundle 'Valloric/MatchTagAlways'
+"Bundle 'Syntastic'
+"Bundle 'ZenCoding.vim'
 " Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
 " Consider the Command-T plugin, which navigates files easily.
 " Bundle 'wincent/Command-T'
@@ -68,7 +64,6 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-
 " -----------------------------------------------------------
 
 " Match Always
@@ -81,29 +76,16 @@ let g:mta_filetypes = {
     \ 'php' : 1,
     \}
 
-
 " -----------------------------------------------------------
+
+
+" SETTINGS
 
 if has('gui_running')
   " Make shift-insert work like in Xterm
   map <S-Insert> <MiddleMouse>
   map! <S-Insert> <MiddleMouse>
 endif
-
-" Enables syntax hilighting:
-syntax on
-
-" Sets the colorscheme to Zenburn <3 
-" Alternatives would be railcasts or distinguished.
-colorscheme distinguished
-
-" When I close a tab, remove the buffer
-set nohidden
-
-" Makes the BackSpace-button work:
-set backspace=indent,eol,start
-
-set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
 
 " Set the file encoding to utf8:
 if has("multi_byte")
@@ -118,8 +100,30 @@ endif
 " Source:
 "http://stackoverflow.com/questions/5477565/how-to-setup-vim-properly-for-editing-in-utf-8
 
-" Should enforce mouse copying and pasting capabilities:
-set mouse=a
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+autocmd BufReadPost *
+    \ if line(" '\"") > 0 && line("'\"") <= line("$") |
+    \   exe " normal! g`\"" |
+    \ endif
+
+syntax on " Enables syntax hilighting:
+
+"set relativenumber " Unfortunately those numbers are too damn visible/noticeable sometimes.
+set showmatch
+set cursorcolumn " Highlight current column (horizontal position)."
+set cursorline " Highlight current line, kind of like a crosshair when combined with the above.
+
+colorscheme molokai " Railcasts, distinguished, zenburn or molokai are good choices.
+
+set nohidden " When I close a tab, remove the buffer
+
+set backspace=indent,eol,start " Makes the BackSpace-button work:
+
+set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
+
+set mouse=a " Should enforce mouse copying and pasting capabilities:
 
 " Sets the use of the * register rather than the + register (useful for copying and pasting):
 " unnamedplus is the standard internal vim buffer, and * is selection. This should sync them.
@@ -130,33 +134,23 @@ set clipboard=unnamedplus
 " smartcase makes a search containing any upper case letters case sensitive.
 set ignorecase
 set smartcase
+set incsearch " Match /searches as typed (saves time)
 
-" Match /searches as typed (saves time)
-set incsearch
+set smarttab " Delete tabs as one space, use tabs at the start of a line, spaces elsewhere.
+set expandtab " Expandtab: Changes inserted tabs to spaces, so noexpandtab should prevent that, I guess? Wonder what's default.
 
-" Tabstop: Sets how many spaces a manually inserted tab consists of.
-" Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
-" Expandtab: changes inserted tabs to spaces, so noexpandtab should prevent
-" that, I guess? Wonder what's default.
-" Softtabstop:
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set softtabstop=4
+set tabstop=4 " Tabstop: Sets how many spaces a manually inserted tab consists of.
+set shiftwidth=4 " Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
+set softtabstop=4 " Softtabstop:
 
-" Keep a newline at the same level as the current indentation.
-set autoindent
-" smartindent' automatically inserts one extra level of indentation in some
-" cases, and works for C-like files. 
+set autoindent " Keep a newline at the same level as the current indentation.
+set smartindent " smartindent automatically inserts one extra level of indentation in some cases, and works for C-like files.
+
 " An alternative, which is NOT to be used along with smartindent, is file type
 " based indentation.
-set smartindent
 
 " More info: http://vim.wikia.com/wiki/Indenting_source_code#.27autoindent.27
 
-" Delete tabs as one space, use tabs at the start of a line, spaces
-" elsewhere.
-set smarttab
 
 " Vim has some strange behaviour of autoindenting like crazy when you paste text into it, if autoindent is enabled. This should simplify switching autoindent on and off, which is at least some kind of solution.
 " showmode makes vim show what mode you're in, except for normal mode.
@@ -164,51 +158,20 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 
+set wildmenu " Nice menu to navigate through possible completions
+
+" On tab press 1: Complete as much as possible, on 2: show a list of completions, on 3: cycle through all available completions.
+set wildmode=longest,list,full
+
+
 
 " -----------------------------------------------------------
 
 
 " MAPPINGS:
 
-
-" Shortcut for NERDTree
-map <F3> :NERDTreeToggle<Return>
-
-" Number nonumber toggle:
-map <F5> :set invnumber<CR>
-
-" Otherwise vim complains when I open some files, even though this is related to pattern matching.
-" set maxmempattern=2000
-
-" If you forget to sudo edit something, this can make you sudo inside vim:
-cmap w!! %!sudo tee > /dev/null %
-" cmap w!! w !sudo dd of=%
-
-" Run python program from inside vim:
-autocmd FileType python map <F6> :!python %<CR>
-
-" Insert newlines without entering insert modes. j and k makes the cursor stay at
-" the line it was at to begin with. S-Enter does not work currently.
-nmap <S-Enter> O<Esc>j
-nmap <CR> o<Esc>k
-
-" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
-
 " Sets the leader character:
 let mapleader = ","
-
-" Open Url on this line with the browser \w
-map <Leader>w :call Browser ()<CR>
-
-" Go directly from insert mode to command mode (:)
-imap ii <C-[>:
-
-" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
-" used in actual words):
-inoremap jj <Esc>l
-
-" Save easier - experiment:
-inoremap hh <Esc>:w<CR>
 
 " Disable arrow keys
 map <up> <nop>
@@ -220,16 +183,38 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
-" ,t to open a New tab:
-map <Leader>t :tabnew<CR>    
-" ,n to cycle through open tabs:
-map <Leader>n :tabnext<CR>    
-" ,c to close the current tab:
-map <Leader>c :tabclose<CR>
-" ,q close all tabs if all changes have been saved:
-map <Leader>q :qall<CR>
-" ,wq write and close all tabs:
-map <Leader>wq :wqall<CR>
+map <F1> <Esc> " Because of pesky help. Could be used for something else though?
+
+map <F3> :NERDTreeToggle<Return>
+map <F5> :set invnumber<CR>
+
+nnoremap <leader>n :call NumberToggle()<cr>
+
+imap ii <C-[>: " Go directly from insert mode to command mode (:i)
+
+" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
+" used in actual words):
+inoremap jj <Esc>l
+
+" Otherwise vim complains when I open some files, even though this is related to pattern matching.
+" set maxmempattern=2000
+
+" If you forget to sudo edit something, this can make you sudo inside vim:
+cmap w!! %!sudo tee > /dev/null %
+" cmap w!! w !sudo dd of=%
+
+" Insert newlines without entering insert modes. j and k makes the cursor stay at
+" the line it was at to begin with. S-Enter does not work currently.
+nmap <S-Enter> O<Esc>j
+nmap <CR> o<Esc>k
+
+" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
+
+" Easier saving - insert mode
+inoremap hh <Esc>:w<CR>
+
+" Easier saving - normal mode
+nmap <leader>w :w<Enter>
 
 " Map æ to tab previous and ø to tab next:
 nmap æ gT
@@ -239,33 +224,24 @@ nmap ø gt
 " CTRL-N for word completion is too weird. Maybe this is a little bit better?:
 imap ½½ <C-n>
 
-" Easier saving
-nmap we :w<Enter>
+" Open Url on this line with the browser \w
+map <Leader>w :call Browser ()<CR>
+
+" ,t to open a New tab:
+map <Leader>t :tabnew<CR>    
+" ,c to close the current tab:
+map <Leader>c :tabclose<CR>
+" ,q close all tabs if all changes have been saved:
+map <Leader>q :qall<CR>
+" ,wq write and close all tabs:
+map <Leader>wq :wqall<CR>
+
 
 
 " Abbreviations:
 " Typing cmt is automatically expanded to this:
-abb cmt # Comment - Entered on :r! date-JA by lys
+iabb cmt # Comment - Entered on :r! date-JA by lys
 cabb what tabe /home/lys/linux/vim/basics.txt
-
-
-" When editing a file, always jump to the last known cursor position.
-"   " Don't do it when the position is invalid or when inside an event handler
-"     " (happens when dropping a file on gvim).
-autocmd BufReadPost *
-    \ if line(" '\"") > 0 && line("'\"") <= line("$") |
-    \   exe " normal! g`\"" |
-    \ endif
-
-" Nice menu to navigate through possible completions
-set wildmenu
-" On tab press 1: Complete as much as possible, on 2: show a list of completions, on 3: cycle through all available completions.
-set wildmode=longest,list,full
-
-" Sort CSS properties
-nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
-
-
 
 
 " FUNCTIONS:
@@ -311,6 +287,15 @@ endfunction
 autocmd VimLeave * call SaveSession()
 
 
+" Switch between absolute and relative line numbers easily.
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
 " For coding C:
 
 map <Leader>ck :call C_compile ()<CR>
@@ -326,6 +311,12 @@ function! C_compile_run ()
 	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
 	exec "!x/%:t:r"
 endfunction
+
+" Sort CSS properties
+nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
+
+" Run python program from inside vim:
+autocmd FileType python map <F6> :!python %<CR>
 
 
 
