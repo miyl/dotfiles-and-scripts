@@ -41,8 +41,8 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-surround'
 Bundle 'Valloric/MatchTagAlways'
-"Bundle 'Syntastic'
-"Bundle 'ZenCoding.vim'
+" Bundle 'Syntastic'
+" Bundle 'ZenCoding.vim'
 " Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
 " Consider the Command-T plugin, which navigates files easily.
 " Bundle 'wincent/Command-T'
@@ -115,6 +115,8 @@ set showmatch
 set cursorcolumn " Highlight current column (horizontal position)."
 set cursorline " Highlight current line, kind of like a crosshair when combined with the above.
 
+set guioptions=aegiLt " For gvim: Don't show toolbar, menubar and right scrollbar.
+
 colorscheme molokai " Railcasts, distinguished, zenburn or molokai are good choices.
 
 set nohidden " When I close a tab, remove the buffer
@@ -148,9 +150,7 @@ set smartindent " smartindent automatically inserts one extra level of indentati
 
 " An alternative, which is NOT to be used along with smartindent, is file type
 " based indentation.
-
 " More info: http://vim.wikia.com/wiki/Indenting_source_code#.27autoindent.27
-
 
 " Vim has some strange behaviour of autoindenting like crazy when you paste text into it, if autoindent is enabled. This should simplify switching autoindent on and off, which is at least some kind of solution.
 " showmode makes vim show what mode you're in, except for normal mode.
@@ -162,7 +162,6 @@ set wildmenu " Nice menu to navigate through possible completions
 
 " On tab press 1: Complete as much as possible, on 2: show a list of completions, on 3: cycle through all available completions.
 set wildmode=longest,list,full
-
 
 
 " -----------------------------------------------------------
@@ -214,7 +213,7 @@ nmap <CR> o<Esc>k
 inoremap hh <Esc>:w<CR>
 
 " Easier saving - normal mode
-nmap <leader>w :w<Enter>
+ nmap qw :w<Enter>
 
 " Map æ to tab previous and ø to tab next:
 nmap æ gT
@@ -235,7 +234,6 @@ map <Leader>c :tabclose<CR>
 map <Leader>q :qall<CR>
 " ,wq write and close all tabs:
 map <Leader>wq :wqall<CR>
-
 
 
 " Abbreviations:
@@ -269,8 +267,6 @@ nmap <F4> <ESC>:call LoadSession()<CR>
 " directory. If necessary a separate file with the working dir could be
 " created, mainly for the purpose of getting an overview of what projects are
 " saved in the directory. I'm thinking of using md5.
-
-"let name = 
 
 let s:sessionloaded = 0
 function LoadSession()
@@ -318,7 +314,10 @@ nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
 " Run python program from inside vim:
 autocmd FileType python map <F6> :!python %<CR>
 
-
+" SML:
+autocmd BufReadPost *.sml silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
+autocmd BufReadPost *.sig silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType sml setlocal makeprg=mosml\ -P\ full\ '%'
 
 
 " TESTING GROUNDS

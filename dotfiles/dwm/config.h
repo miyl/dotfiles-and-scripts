@@ -63,7 +63,8 @@ static const char *termcmd[]  = { "urxvtc -fade 25", NULL };
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_x,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,						XK_Return, spawn,          {.v = termcmd } },
+    /* { MODKEY,						XK_Return, spawn,          {.v = termcmd } }, */
+	{ MODKEY,						XK_Return, spawn,          SHCMD("urxvtc -fade 25")},
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -86,7 +87,7 @@ static Key keys[] = {
 	{ MODKEY,  			            XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,				XK_q,	   spawn,  SHCMD("sudo shutdown -r now") },
 	{ MODKEY|ControlMask,			XK_q,	   spawn,  SHCMD("sudo shutdown -h now") },
-	{ MODKEY|ControlMask,			XK_s,	   spawn,  SHCMD("sudo pm-hibernate --quirk-dpms-on") },
+	{ MODKEY|ControlMask,			XK_s,	   spawn,  SHCMD("sudo pm-hibernate --quirk-dpms-on & slock") },
 	{ MODKEY|ControlMask,			XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoffLock.sh") },
 	{ MODKEY,						XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoff.sh") },
 	{ MODKEY,						XK_v, 	   spawn,  SHCMD("/home/lys/sh/volume_controls/volume_up.sh") },

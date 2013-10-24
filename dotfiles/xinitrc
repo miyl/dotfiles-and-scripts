@@ -1,5 +1,3 @@
-
-
 # Setting the environment:
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -24,78 +22,11 @@ if [ -f "$usermodmap" ]; then
 fi
 
 
-
-
-
-
-#!/bin/sh
-#eval "$(gpg-agent --daemon)"
-#display -window root repo/dwm/dwm.png
-#xsetroot -solid black
-
-wifi(){
-      STATUS="X`/usr/sbin/iwgetid`"
-      if test "$STATUS" != "X" ; then
-        ESSID="`/usr/sbin/iwgetid |awk -F ":" '{print $2}'|sed -e 's/"//g'`"
-#        LINK="`awk '/wlan0:/ {print $3}' /proc/net/wireless |sed -e 's/\.//g'`"
-      echo " $ESSID"
-      fi
-    }
-
-batt(){
-      FULL=`cat /sys/class/power_supply/BAT1/charge_full`
-      PRESENT=`cat /sys/class/power_supply/BAT1/present`
-      CHARGE=`cat /sys/class/power_supply/BAT1/charge_now`
-      STATUS=`cat /sys/class/power_supply/BAT1/status`
-    if test "$PRESENT" != "0" ; then
-      CHARGE=$((${CHARGE}*100/${FULL}))
-      case $STATUS in
-        Full)
-          SIGN="=";;
-        Charging)
-          SIGN="+";;
-        Discharging)
-          SIGN="-";;
-                Unknown)
-                  SIGN=" AC";;
-      esac
-      echo "Bat: ${CHARGE}${SIGN}"
-    else
-      echo " AC"
-    fi
-    }
-
-volume(){ #changed -c 0 to -c Intel, so no matter which number it gets it will be uniquely identifiable this way, to prevent errors.
-        echo "Vol: `/usr/bin/amixer -c Intel get Master | awk '/Mono/{print $4}' | tr -d \"[]\n\"`"
-    }
-
-cmusstats(){
-      if test "X`pgrep cmus`" != "X" ; then
-        TIME="`cmus-remote -Q |awk '/duration/ {print $2}'`"
-        CURR="`cmus-remote -Q |awk '/position/ {print $2}'`"
-        ARTIST="`cmus-remote -Q |sed -ne '/artist/s/tag artist //pg'`"
-        TITLE="`cmus-remote -Q |sed -ne '/title/s/tag title //pg'`"
-        echo "$TITLE ($ARTIST) $CURR/$TIME"
-      fi
-    }
-
-while true; do
-  xsetroot -name "`cmusstats` `volume` `batt` `date +'%d/%m %H:%M'`"
-  if [ `acpi | awk -F'[ %]*' '{print $4}'` -lt 7 ] && [ `acpi | awk '{print $3}'` = "Discharging," ]; then
-        /home/lys/sh/hibernate.sh
-  fi
-  sleep 10
-done &
-
-# Removed the wifi part. Here's the original:
-#  xsetroot -name "`cmusstats``wifi` `volume` `batt` `date +'%d/%m %H:%M'`"
-
-
-
+# Source the script that generates the info in the dwm menu bar, since it's basically its own module:
+source /home/lys/sh/X_infobar.sh
 
 # Set keyboard layout to danish. Probably suboptimal, but it works.
 setxkbmap dk
-
 
 # Autocutsel syncronisation between primary selection and the clipboard.
 
@@ -109,7 +40,6 @@ if [ -x /usr/bin/autocutsel ]; then
     autocutsel -selection PRIMARY -fork
 fi
 
-
 # Enable Terminus & artwiz in Arch ( / dwm ):
 xset +fp /usr/share/fonts/local
 xset +fp /usr/share/fonts/artwiz-fonts
@@ -117,11 +47,7 @@ xset fp rehash
 
 # - Set background image:
 #feh --bg-scale /media/data/Video/Billeder/BGs/dwm_bg2.png &
-# feh --bg-center /media/data/Video/Billeder/BGs/twilight-sparkle.png &
 # /home/lys/bin/astronomy_potd_wallpaper.sh
-# feh --bg-center /media/data/Video/Billeder/BGs/Arch\ Linux\ Wallpaper\ by\ james66.jpg
-#feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse.png
-#feh --bg-center /media/data/Video/Billeder/BGs/Vegas_inverse_v2.png
 feh --bg-center /media/data/Video/Billeder/BGs/friendship-is-magic-fanart.png
 
 # Disables screen blanking (0), suspends the screen after 6 minutes and then turns it off after 7.
@@ -137,7 +63,7 @@ urxvtd --quiet --opendisplay --fork
 # Boot numlock on:
 numlockx &
 
-# Unclutter, hiding the cursor after some seconds of inactivity.
+# Unclutter - hide the cursor after some seconds of mouse inactivity.
 exec unclutter -root &
 
 #exec dwm

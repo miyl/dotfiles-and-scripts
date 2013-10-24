@@ -37,6 +37,7 @@ cp $sh/screenshot.sh $scripts
 
 #web
 cp $home/www/lys/index.html upload/
+cp $home/www/lys/test.html upload/
 cp $home/www/lys/css.css upload/
 
 # security
