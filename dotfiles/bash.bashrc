@@ -1,108 +1,140 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+#
+# /etc/bash.bashrc
+#
+# More human friendly color names:
+# Reset
+Color_Off='\e[0m'       # Text Reset
+
+# Regular Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+# Bold
+BBlack='\e[1;30m'       # Black
+BRed='\e[1;31m'         # Red
+BGreen='\e[1;32m'       # Green
+BYellow='\e[1;33m'      # Yellow
+BBlue='\e[1;34m'        # Blue
+BPurple='\e[1;35m'      # Purple
+BCyan='\e[1;36m'        # Cyan
+BWhite='\e[1;37m'       # White
+
+# Underline
+UBlack='\e[4;30m'       # Black
+URed='\e[4;31m'         # Red
+UGreen='\e[4;32m'       # Green
+UYellow='\e[4;33m'      # Yellow
+UBlue='\e[4;34m'        # Blue
+UPurple='\e[4;35m'      # Purple
+UCyan='\e[4;36m'        # Cyan
+UWhite='\e[4;37m'       # White
+
+# Background
+On_Black='\e[40m'       # Black
+On_Red='\e[41m'         # Red
+On_Green='\e[42m'       # Green
+On_Yellow='\e[43m'      # Yellow
+On_Blue='\e[44m'        # Blue
+On_Purple='\e[45m'      # Purple
+On_Cyan='\e[46m'        # Cyan
+On_White='\e[47m'       # White
+
+# High Intensity
+IBlack='\e[0;90m'       # Black
+IRed='\e[0;91m'         # Red
+IGreen='\e[0;92m'       # Green
+IYellow='\e[0;93m'      # Yellow
+IBlue='\e[0;94m'        # Blue
+IPurple='\e[0;95m'      # Purple
+ICyan='\e[0;96m'        # Cyan
+IWhite='\e[0;97m'       # White
+
+# Bold High Intensity
+BIBlack='\e[1;90m'      # Black
+BIRed='\e[1;91m'        # Red
+BIGreen='\e[1;92m'      # Green
+BIYellow='\e[1;93m'     # Yellow
+BIBlue='\e[1;94m'       # Blue
+BIPurple='\e[1;95m'     # Purple
+BICyan='\e[1;96m'       # Cyan
+BIWhite='\e[1;97m'      # White
+
+# High Ijntensity backgrounds
+On_IBlack='\e[0;100m'   # Black
+On_IRed='\e[0;101m'     # Red
+On_IGreen='\e[0;102m'   # Green
+On_IYellow='\e[0;103m'  # Yellow
+On_IBlue='\e[0;104m'    # Blue
+On_IPurple='\e[0;105m'  # Purple
+On_ICyan='\e[0;106m'    # Cyan
+On_IWhite='\e[0;107m'   # White
+
+colors() {
+	local fgc bgc vals seq0
+
+	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
+	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
+	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
+	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+
+	# foreground colors
+	for fgc in {30..37}; do
+		# background colors
+		for bgc in {40..47}; do
+			fgc=${fgc#37} # white
+			bgc=${bgc#40} # black
+
+			vals="${fgc:+$fgc;}${bgc}"
+			vals=${vals%%;}
+
+			seq0="${vals:+\e[${vals}m}"
+			printf "  %-9s" "${seq0:-(default)}"
+			printf " ${seq0}TEXT\e[m"
+			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
+		done
+		echo; echo
+	done
+}
+
 
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+[[ $- != *i* ]] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoreboth
+#PS1='[\u@\h \W]$ '
+#PS1='\u@\h \W '
+#PS1="\n\[$IYellow\]\u@\h \[$Yellow\]\W \[$White\]"
+PS1="\n\[$IYellow\]\u@\h : \W \[$White\]"
+PS2='> '
+PS3='> '
+PS4='+ '
 
-# append to the history file, don't overwrite it
-shopt -s histappend
+case ${TERM} in
+  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
-*)
+  screen)
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
     ;;
 esac
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-#if [ -f ~/.bash_aliases ]; then
-#    . ~/.bash_aliases
-#fi
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    #alias grep='grep --color=auto'
-    #alias fgrep='fgrep --color=auto'
-    #alias egrep='egrep --color=auto'
-fi
-
-# some more ls aliases
-#alias l='ls -CF'
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
-
-
-
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 
 
 # Lys:
+
+# I'd prefer starting X via inittab, but until I get that to work this should:
+# id returns the user id of the user. 0 is root.
+if [[ -z $DISPLAY && ! -a /tmp/.X11-unix/X0 && $(id -u) != 0 ]]; then
+  exec startx
+fi
 
 # - Aliases:
 alias ll='ls -lh'
@@ -123,14 +155,17 @@ alias lynx='lynx -cfg=~/.config/lynx.cfg -vikeys'
 alias irfanview='wine /media/data/Portable/Irfanview/i_view32.exe'
 alias urxvt='urxvtc'
 alias mount='mount -o uid=lys'
-alias smx='sudo mount -o uid=lys /dev/sdb1 /media/x'
-alias smxc='sudo mount -o uid=lys /dev/sdb1 /media/x && cd /media/x'
+alias smx='sudo mount -o uid=lys /dev/sdb1 /mnt/x'
+alias smxc='sudo mount -o uid=lys /dev/sdb1 /mnt/x && cd /mnt/x'
 alias rn='restart network'
 alias mosml='rlwrap mosml -P full'
+alias v='vim'
+alias ka='sudo killall'
+alias dhcpcd='sudo dhcpcd'
 
 # - - Django:
-alias runserver='python2.7 manage.py runserver'
-alias syncdb='python2.7 manage.py syncdb'
+alias runserver='python manage.py runserver'
+alias syncdb='python manage.py syncdb'
 
 # Make ls's default output coloured and group directories first in listnings:
 # Symlinked directories, however, are unfortunately not.
@@ -144,7 +179,7 @@ alias grep='grep -i --color=always'
 
 # - Envs: 
 # $PATH means first take the current content of PATH then append the following.
-export PATH=$PATH:/home/lys/bin
+export PATH+=:/home/lys/bin
 #export dja='cd /media/data/Video/Egne/www/Django/'
 export www=/media/data/Video/Egne/www/
 export dja=/media/data/Video/Egne/www/django/
@@ -156,9 +191,6 @@ export xin=/etc/X11/xinit/
 export dwm=/home/lys/bin/inst/dwm/dwm/
 export min=/media/data/Diverse/Spil/Minecraft/Survival/
 
-
-# Setting the LANG env to da_DK:
-#export LANG='da_DK.UTF-8'
 # Setting the EDITOR env to vim for Yaourts sake when compiling & editing makempkgs.
 export EDITOR=vim
 
@@ -167,11 +199,6 @@ case "$TERM" in
     TERM=rxvt-unicode
     ;;
 esac
-
-# I'd prefer starting X via inittab, but until I get that to work this should:
-if [[ -z $DISPLAY && ! -a /tmp/.X11-unix/X0 && $(id -u) != 0 ]]; then
-  exec startx
-fi
 
 # Autocompletion when typing sudo x or man x.
 complete -cf sudo
@@ -209,11 +236,15 @@ shopt -s histappend
 PROMPT_COMMAND='history -a'
 
 # Autojump:
-[[ -s /etc/profile.d/autojump.bash ]] && . /etc/profile.d/autojump.bash
+[[ -s /etc/profile.d/autojump.sh ]] && . /etc/profile.d/autojump.sh
+#alias j="autojump"
 
-#Functions
+# Tilføjet pga. KU OSM:
+export PATH="$HOME/yams/bin:$PATH"
 
-#Create archive
+# Functions
+
+# Create archive
 compress () {
     if [ -n "$1" ] ; then
 FILE=$1
@@ -241,6 +272,7 @@ case $1 in
             *.bz2) bunzip2 $1 ;;
             *.rar) unrar x $1 ;;
             *.gz) gunzip $1 ;;
+
             *.tar) tar xf $1 ;;
             *.zip) unzip $1 ;;
             *.Z) uncompress $1 ;;

@@ -88,9 +88,8 @@ cp -r /usr/share/kbd/keymaps/i386/qwerty/mydk-latin1.map.gz usr/share/kbd/keymap
 # /home
 cp -r /$userdir/bin/ $userdir/
 cp -r /$userdir/.config/ $userdir/
-cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactyl /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources $userdir/
-cp -r /$userdir/.pentadactyl $userdir/
-cp -r /$userdir/.gitignore_global $userdir/
+cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactylrc /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources /$userdir/.gitconfig $userdir/
+cp /$userdir/.gitignore /$userdir/.gitignore_global $userdir/
 
 # END OF FILE BACKUPS
 

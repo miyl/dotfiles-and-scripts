@@ -10,13 +10,15 @@
 " properly set to work with the Vim-related packages.
 runtime! archlinux.vim
 
-filetype plugin indent on
+let g:rehash256=1
 
 " If you prefer the old-style vim functionalty, add 'runtime! vimrc_example.vim'
-" Or better yet, read /usr/share/vim/vim73/vimrc_example.vim or the vim manual
+" Or better yet, read /usr/share/vim/vim74/vimrc_example.vim or the vim manual
 " and configure vim to your own liking!
 
 " Vundle
+"
+"set guifont=Monaco
 
 set nocompatible " Turns off strict vi compatibility:
 
@@ -26,7 +28,7 @@ filetype off                   " required!
 " Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
 " filetype plugin on
 
-set rtp+=/home/lys/.vim/bundle/vundle/
+set rtp+=/home/lys/.vim/bundle/Vundle.vim/
 call vundle#rc()
 
 " let Vundle manage Vundle
@@ -41,6 +43,7 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-surround'
 Bundle 'Valloric/MatchTagAlways'
+Bundle 'bkad/CamelCaseMotion'
 " Bundle 'Syntastic'
 " Bundle 'ZenCoding.vim'
 " Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
@@ -110,20 +113,23 @@ autocmd BufReadPost *
 
 syntax on " Enables syntax hilighting:
 
-"set relativenumber " Unfortunately those numbers are too damn visible/noticeable sometimes.
+set relativenumber " Relative line numbers.
+set number " except for the current line
+" darker color for line numbers in non-gvim vim:
+" Colors here: http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+highlight LineNr ctermfg=darkblue 
 set showmatch
 set cursorcolumn " Highlight current column (horizontal position)."
 set cursorline " Highlight current line, kind of like a crosshair when combined with the above.
 
-set guioptions=aegiLt " For gvim: Don't show toolbar, menubar and right scrollbar.
+set guioptions=agit " For gvim: a: copy pasting, i: vim icon
 
-colorscheme molokai " Railcasts, distinguished, zenburn or molokai are good choices.
 
 set nohidden " When I close a tab, remove the buffer
 
 set backspace=indent,eol,start " Makes the BackSpace-button work:
 
-set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
+set directory=/home/lys/.tmp " Don't clutter my dirs up with swp and tmp files. Not using ~ due to sudoedit.
 
 set mouse=a " Should enforce mouse copying and pasting capabilities:
 
@@ -141,9 +147,9 @@ set incsearch " Match /searches as typed (saves time)
 set smarttab " Delete tabs as one space, use tabs at the start of a line, spaces elsewhere.
 set expandtab " Expandtab: Changes inserted tabs to spaces, so noexpandtab should prevent that, I guess? Wonder what's default.
 
-set tabstop=4 " Tabstop: Sets how many spaces a manually inserted tab consists of.
-set shiftwidth=4 " Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
-set softtabstop=4 " Softtabstop:
+set tabstop=2 " Tabstop: Sets how many spaces a manually inserted tab consists of.
+set shiftwidth=2 " Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
+set softtabstop=2 " Softtabstop:
 
 set autoindent " Keep a newline at the same level as the current indentation.
 set smartindent " smartindent automatically inserts one extra level of indentation in some cases, and works for C-like files.
@@ -155,8 +161,11 @@ set smartindent " smartindent automatically inserts one extra level of indentati
 " Vim has some strange behaviour of autoindenting like crazy when you paste text into it, if autoindent is enabled. This should simplify switching autoindent on and off, which is at least some kind of solution.
 " showmode makes vim show what mode you're in, except for normal mode.
 nnoremap <F2> :set invpaste paste?<CR>
-set pastetoggle=<F2>
+"set pastetoggle=<F2>
 set showmode
+
+" Prevent auto indentation when pasting from clipboard. Not sure how this works, but worth a try if it automatically detects pasting.
+set pastetoggle=togl
 
 set wildmenu " Nice menu to navigate through possible completions
 
@@ -187,41 +196,12 @@ map <F1> <Esc> " Because of pesky help. Could be used for something else though?
 map <F3> :NERDTreeToggle<Return>
 map <F5> :set invnumber<CR>
 
-nnoremap <leader>n :call NumberToggle()<cr>
-
-imap ii <C-[>: " Go directly from insert mode to command mode (:i)
-
-" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
-" used in actual words):
-inoremap jj <Esc>l
-
-" Otherwise vim complains when I open some files, even though this is related to pattern matching.
-" set maxmempattern=2000
-
-" If you forget to sudo edit something, this can make you sudo inside vim:
-cmap w!! %!sudo tee > /dev/null %
-" cmap w!! w !sudo dd of=%
-
-" Insert newlines without entering insert modes. j and k makes the cursor stay at
-" the line it was at to begin with. S-Enter does not work currently.
-nmap <S-Enter> O<Esc>j
-nmap <CR> o<Esc>k
-
-" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
-
-" Easier saving - insert mode
-inoremap hh <Esc>:w<CR>
-
-" Easier saving - normal mode
- nmap qw :w<Enter>
-
-" Map æ to tab previous and ø to tab next:
-nmap æ gT
-nmap ø gt
-" nnoremap <S-ø> :tabnew
-
-" CTRL-N for word completion is too weird. Maybe this is a little bit better?:
-imap ½½ <C-n>
+" Easier moving in tabs and windows
+" Use H J K L while holding down Ctrl.
+map <C-H> <C-W>h<C-W>_
+map <C-J> <C-W>j<C-W>_
+map <C-K> <C-W>k<C-W>_
+map <C-L> <C-W>l<C-W>_
 
 " Open Url on this line with the browser \w
 map <Leader>w :call Browser ()<CR>
@@ -235,6 +215,54 @@ map <Leader>q :qall<CR>
 " ,wq write and close all tabs:
 map <Leader>wq :wqall<CR>
 
+
+" Otherwise vim complains when I open some files, even though this is related to pattern matching.
+" set maxmempattern=2000
+
+
+" Insert newlines without entering insert modes. j and k makes the cursor stay at
+" the line it was at to begin with. S-Enter does not work currently.
+nmap <S-Enter> O<Esc>j
+nmap <CR> o<Esc>k
+
+" Open file under cursor in new tab by default
+nmap gf <C-w>gf
+
+" More info: http://vim.wikia.com/wiki/Insert_newline_without_entering_insert_mode
+
+" Easier saving - insert mode
+inoremap hh <Esc>:w<CR>
+
+" Easier saving - normal mode
+ nmap qw :w<CR>
+
+" Map æ to tab previous and ø to tab next:
+nmap æ gT
+nmap ø gt
+" nnoremap <S-ø> :tabnew
+
+nnoremap <leader>n :call NumberToggle()<cr>
+
+" CTRL-N for word completion is too weird. Maybe this is a little bit better?:
+imap ½½ <C-n>
+
+imap ii <C-[>: " Go directly from insert mode to command mode (:i)
+
+" Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
+" used in actual words):
+inoremap jj <Esc>l
+
+" If you forget to sudo edit something, this can make you sudo inside vim:
+cmap w!! w !sudo tee > /dev/null %
+" cmap w!! w !sudo dd of=%
+
+" Prevent lazy pinky on the shift button
+:command W w
+:command Q q
+:command WQ wq
+:command Wq wq
+:command QA wq
+:command Qa wq
 
 " Abbreviations:
 " Typing cmt is automatically expanded to this:
@@ -334,5 +362,7 @@ endfunction
 
 map <Leader>f :call ClearAllButMatches ()<CR>
 
+" Defining the colorscheme last, because otherwise there was weird errors
+colorscheme molokai " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
 
 " GRAVEYARD:

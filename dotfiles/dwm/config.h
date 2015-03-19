@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-/* static const char font[]            = "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*"; */
-static const char font[]            = "-artwiz-nu-*-*-*-*-11-*-*-*-*-*-iso10646-*";
+//static const char font[]            = "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*"; 
+static const char font[]            = "-artwiz-nu-*-*-*-*-12-*-*-*-*-*-iso10646-*";
 /* static const char font[]            = "";*/
 static const char normbordercolor[] = "#3f3f3f";
 /* static const char normbgcolor[]     = "#1a1E1C"; */
@@ -17,7 +17,7 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 
 /* tagging */
-static const char *tags[] = { "te", "ww", "i", "ii", "iii"};
+static const char *tags[] = { "te", "ww", "i", "ii", "iii", "iv"};
 
 static const Rule rules[] = {
 	/* class            instance    title       tags mask     isfloating   monitor */
@@ -26,6 +26,7 @@ static const Rule rules[] = {
 	{ "Thunderbird",    NULL,       NULL,       8,	  		False,        -1 },
 	{ "Vlc",            NULL,       NULL,       8,	  		False,        -1 },
 	{ "Deluge",         NULL,       NULL,       16,	  		False,        -1 },
+	{ "Xmessage",       NULL,       NULL,       0,	  		True,        -1 },
 };
 
 /* layout(s) */
@@ -84,37 +85,37 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	
 	/* Lys: */	
-	{ MODKEY,  			            XK_q,      quit,           {0} },
-	{ MODKEY|ShiftMask,				XK_q,	   spawn,  SHCMD("sudo shutdown -r now") },
-	{ MODKEY|ControlMask,			XK_q,	   spawn,  SHCMD("sudo shutdown -h now") },
-	{ MODKEY|ControlMask,			XK_s,	   spawn,  SHCMD("sudo pm-hibernate --quirk-dpms-on & slock") },
-	{ MODKEY|ControlMask,			XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoffLock.sh") },
-	{ MODKEY,						XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoff.sh") },
-	{ MODKEY,						XK_v, 	   spawn,  SHCMD("/home/lys/sh/volume_controls/volume_up.sh") },
-	{ MODKEY,						XK_c,	   spawn,  SHCMD("/home/lys/sh/volume_controls/volume_down.sh") },
-	{ MODKEY|ControlMask,			XK_0,	   spawn,  SHCMD("/home/lys/sh/asoundrc_xchange.sh") },
-	{ 0,							XK_Print,  spawn,  SHCMD("/home/lys/sh/screenshot.sh") },
-	{ 0,							XK_Pause,  spawn,  SHCMD("/home/lys/sh/start_stop.sh") },
-	{ MODKEY,						XK_comma,  spawn,  SHCMD("cmus-remote -r") },
-	{ MODKEY,						XK_period, spawn,  SHCMD("cmus-remote -n") },
-	{ MODKEY|ControlMask,			XK_comma,  spawn,  SHCMD("cmus-remote -k -5") },
-	{ MODKEY|ControlMask,			XK_period, spawn,  SHCMD("cmus-remote -k +5") },
-	{ 0,							XK_Scroll_Lock,		spawn,  SHCMD("/home/lys/sh/monoff.sh") },
-/*	{ 0,							XK_F11,		spawn,  SHCMD("firefox") }, */
-	{ 0,							XK_F12,		spawn, SHCMD("urxvtc -e cmus") },
+  { MODKEY,  			            XK_q,      quit,           {0} },
+  { MODKEY|ShiftMask,				  XK_q,	   spawn,  SHCMD("shutdown -r now") },
+  { MODKEY|ControlMask,			  XK_q,	   spawn,  SHCMD("shutdown -h now") },
+  { MODKEY|ControlMask,			  XK_s,	   spawn,  SHCMD("pm-hibernate --quirk-dpms-on & slock") },
+  { MODKEY|ControlMask,			  XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoffLock.sh") },
+  { MODKEY,						        XK_z, 	   spawn,  SHCMD("/home/lys/sh/monoff.sh") },
+  { MODKEY,						        XK_v, 	   spawn,  SHCMD("/home/lys/sh/volume_controls/volume_up.sh") },
+  { MODKEY,						        XK_c,	   spawn,  SHCMD("/home/lys/sh/volume_controls/volume_down.sh") },
+  { MODKEY|ControlMask,			  XK_0,	   spawn,  SHCMD("/home/lys/sh/asoundrc_xchange.sh") },
+  { 0,							          XK_Print,  spawn,  SHCMD("/home/lys/sh/screenshot.sh") },
+  { 0,							          XK_Pause,  spawn,  SHCMD("/home/lys/sh/start_stop.sh") },
+  { MODKEY,						        XK_comma,  spawn,  SHCMD("cmus-remote -r") },
+  { MODKEY,						        XK_period, spawn,  SHCMD("cmus-remote -n") },
+  { MODKEY|ControlMask,			  XK_comma,  spawn,  SHCMD("cmus-remote -k -5") },
+  { MODKEY|ControlMask,			  XK_period, spawn,  SHCMD("cmus-remote -k +5") },
+  { 0,							          XK_Scroll_Lock,		spawn,  SHCMD("/home/lys/sh/monoff.sh") },
+  /*	{ 0,							      XK_F11,		spawn,  SHCMD("firefox") }, */
+  { 0,							          XK_F12,		spawn, SHCMD("urxvtc -e cmus") },
 
 	/* Scratchpad: */
 	{ MODKEY|ControlMask, 			XK_ae,	   spawn, 			{.v = scratchpadcmd } }, /* for more scratchpads */
-	{ MODKEY, 						XK_ae,     togglescratchpad,{.v = scratchpadcmd } },
-	{ MODKEY, 						XK_oslash, togglescratchpad,{.v = scratchpadcmd2 } },
+	{ MODKEY, 						      XK_ae,     togglescratchpad,{.v = scratchpadcmd } },
+	{ MODKEY, 						      XK_oslash, togglescratchpad,{.v = scratchpadcmd2 } },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-/*	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
+	TAGKEYS(                        XK_6,                      5)
+/*	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)*/
 /*	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
