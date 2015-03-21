@@ -7,15 +7,18 @@
 dotfiles=upload/dotfiles/
 home=/home/lys
 
-cp /etc/bash.bashrc $dotfiles
-cp /etc/vimrc $dotfiles
-cp /etc/X11/xinit/xinitrc $dotfiles
+cp /etc/bash.bashrc $dotfiles/
+cp /etc/vimrc $dotfiles/
+cp /etc/X11/xinit/xinitrc $dotfiles/
 #cp $home/.bashrc $dotfiles    # I'm not really using it anyway.
-cp $home/.Xresources $dotfiles
+cp $home/.Xresources $dotfiles/
 cp $home/abs-aur/abs/dwm-6.0/dwm/src/dwm-6.0/config.h $dotfiles/dwm/
 cp /usr/share/vim/vim74/colors/molokai_miyalys.vim $dotfiles/
 
 #cp /home/lys/.pentadactylrc $dotfiles
+cp $home/.gitconfig $dotfiles/
+
+sed -i '/email/d' $dotfiles/.gitconfig
 
 # irssi scripts list:
 # using dir because my ls output is coloured by default, inserting weird meta characters in the file. The -1 part of dir means output one file per line.
@@ -43,3 +46,4 @@ cp $sh/screenshot.sh $scripts
 
 # security
 sed -i '/ssh/d' $dotfiles/bash.bashrc # -i means it will do the editing in place rather than output to stdout, avoiding some > workaround.
+

@@ -1,0 +1,15 @@
+[user]
+	name = Marcus Miyalys
+[push]
+	default = simple
+# Track and untrack files more easily. Useful when git has been tracking a file for a while, but you no longer want it in the index:
+[alias]
+  track = update-index --no-assume-unchanged
+  untrack = update-index --assume-unchanged
+
+  # Compress log to show only one line per commit, and show only the 15 latest commits.
+  lg = log --oneline -n 15
+  co = checkout
+
+[color]
+	ui = true
