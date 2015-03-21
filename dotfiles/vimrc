@@ -12,6 +12,7 @@ runtime! archlinux.vim
 
 let g:rehash256=1
 
+
 " If you prefer the old-style vim functionalty, add 'runtime! vimrc_example.vim'
 " Or better yet, read /usr/share/vim/vim74/vimrc_example.vim or the vim manual
 " and configure vim to your own liking!
@@ -44,23 +45,16 @@ Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-surround'
 Bundle 'Valloric/MatchTagAlways'
 Bundle 'bkad/CamelCaseMotion'
-" Bundle 'Syntastic'
+Bundle 'Shougo/unite.vim'
+  Bundle 'Shougo/vimproc.vim'
+" Bundle 'rking/ag.vim'
+"   Bundle 'ggreer/the_silver_searcher'
 " Bundle 'ZenCoding.vim'
 " Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
-" Consider the Command-T plugin, which navigates files easily.
+" Consider the Command-T plugin, which navigates files easily. Similar to unite?
 " Bundle 'wincent/Command-T'
 
-" Vundle: The plugin handler itself, keeps them updated when run manually once in a while.
-" DelimitMate: Add things like two quotes immediately when writing one pair of them.
-" EasyMotion: Navigate more effectively inside vim, with link-follow-like functionality.
-" Syntastic: Check syntax inside vim.
-" The-NERD-Commenter: Comment in or out text easily.                                                   filetype plugin indent on           " required!  
-" The-NERD-tree: File tree directly inside vim.
-" ZenCoding: Various coding shortcuts.
-" Surround: Surround text, lines, words, whatever with quotes or tags (typically, at least). " -----------------------------------------------------------
-" Ultisnips: Snippets.
-
-" Ultisnips
+" Ultisnips:
 
 let g:UltiSnipsListSnippets="<Leader><tab>"
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -207,13 +201,9 @@ map <C-L> <C-W>l<C-W>_
 map <Leader>w :call Browser ()<CR>
 
 " ,t to open a New tab:
-map <Leader>t :tabnew<CR>    
+map <Leader>tn :tabnew<CR>
 " ,c to close the current tab:
-map <Leader>c :tabclose<CR>
-" ,q close all tabs if all changes have been saved:
-map <Leader>q :qall<CR>
-" ,wq write and close all tabs:
-map <Leader>wq :wqall<CR>
+map <Leader>tc :tabclose<CR>
 
 
 " Otherwise vim complains when I open some files, even though this is related to pattern matching.
@@ -242,6 +232,13 @@ nmap ø gt
 " nnoremap <S-ø> :tabnew
 
 nnoremap <leader>n :call NumberToggle()<cr>
+
+" Unite.vim: Search for files by name:
+nnoremap <C-p> :Unite file_rec/async<cr>
+
+" Unite.vim: Search for text in file recursively from current directory by name:
+nnoremap <space>/ :Unite grep:.<cr>
+" nnoremap <space>/ :Unite ag:.<cr>
 
 " CTRL-N for word completion is too weird. Maybe this is a little bit better?:
 imap ½½ <C-n>
@@ -320,10 +317,9 @@ function! NumberToggle()
   endif
 endfunc
 
-" For coding C:
-
-map <Leader>ck :call C_compile ()<CR>
-map <Leader>cr :call C_compile_run ()<CR>
+" For coding C: (binary C, because the prefix c is already used by nerdcommenter)
+map <Leader>bc :call C_compile ()<CR>
+map <Leader>bcr :call C_compile_run ()<CR>
 
 " Compiles the current program you're inside:
 function! C_compile ()
@@ -364,5 +360,16 @@ map <Leader>f :call ClearAllButMatches ()<CR>
 
 " Defining the colorscheme last, because otherwise there was weird errors
 colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
+
+command! -bar -nargs=1 -bang -complete=file Rename :
+  \ let s:file = expand('%:p') |
+  \ setlocal modified |
+  \ keepalt saveas<bang> <args> |
+  \ if s:file !=# expand('%:p') |
+  \   call delete(s:file) |
+  \ endif |
+  \ unlet s:file
+
+nmap <Leader>r :Rename 
 
 " GRAVEYARD:
