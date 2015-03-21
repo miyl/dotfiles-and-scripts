@@ -81,6 +81,7 @@ cp /etc/udev/rules.d/* etc/udev/rules.d/
 # /usr/share
 cp -r /usr/share/awesome/ usr/share/
 cp -r /usr/share/kbd/keymaps/i386/qwerty/mydk-latin1.map.gz usr/share/kbd/keymaps/i386/qwerty/
+cp /usr/share/vim/vim74/colors/molokai_miyalys.vim /usr/share/   # Not entirely the right directory, but whatever.
 
 # /home - copy all dotfiles and folders.
 #cp -r /$userdir/.[a-zA-Z0-9]* $userdir/dotfile_madness/
@@ -88,8 +89,8 @@ cp -r /usr/share/kbd/keymaps/i386/qwerty/mydk-latin1.map.gz usr/share/kbd/keymap
 # /home
 cp -r /$userdir/bin/ $userdir/
 cp -r /$userdir/.config/ $userdir/
-cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactylrc /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources /$userdir/.gitconfig $userdir/
-cp /$userdir/.gitignore /$userdir/.gitignore_global $userdir/
+cp -r /$userdir/.asoundrc /$userdir/.bashrc /$userdir/.pentadactylrc /$userdir/.ssh /$userdir/.thunderbird/ /$userdir/.vim/ /$userdir/.vimrc /$userdir/.Xresources $userdir/
+cp /$userdir/.gitconfig /$userdir/.gitignore /$userdir/.gitignore_global $userdir/
 
 # END OF FILE BACKUPS
 

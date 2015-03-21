@@ -13,6 +13,8 @@ cp /etc/X11/xinit/xinitrc $dotfiles
 #cp $home/.bashrc $dotfiles    # I'm not really using it anyway.
 cp $home/.Xresources $dotfiles
 cp $home/abs-aur/abs/dwm-6.0/dwm/src/dwm-6.0/config.h $dotfiles/dwm/
+cp /usr/share/vim/vim74/colors/molokai_miyalys.vim $dotfiles/
+
 #cp /home/lys/.pentadactylrc $dotfiles
 
 # irssi scripts list:
@@ -33,7 +35,6 @@ cp $sh/backups/conf_backup/conf_backup.sh $scripts
 cp $sh/hibernate.sh $scripts
 cp $sh/start_stop.sh $scripts
 cp $sh/screenshot.sh $scripts
-cp $sh/X_infobar.sh $scripts
 
 #web
 #cp $home/www/lys/index.html upload/

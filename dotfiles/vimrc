@@ -363,6 +363,6 @@ endfunction
 map <Leader>f :call ClearAllButMatches ()<CR>
 
 " Defining the colorscheme last, because otherwise there was weird errors
-colorscheme molokai " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
+colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
 
 " GRAVEYARD:

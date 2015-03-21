@@ -109,7 +109,7 @@ colors() {
 #PS1='[\u@\h \W]$ '
 #PS1='\u@\h \W '
 #PS1="\n\[$IYellow\]\u@\h \[$Yellow\]\W \[$White\]"
-PS1="\n\[$IYellow\]\u@\h : \W \[$White\]"
+PS1="\n\[$IYellow\]\u@\h | \W \[$White\]"
 PS2='> '
 PS3='> '
 PS4='+ '
