@@ -187,10 +187,13 @@ inoremap <F1> <Esc>:call NumberToggle()<CR>
 nnoremap <F2> :set invpaste paste?<CR>
 map <F3> :NERDTreeToggle<Return>
 map <F4> :set invnumber<CR>
-" Save and load the currently opened windows and files in the current folder.
+
+" Sort CSS properties:
+nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
+
+" Save and load the currently opened windows and files in the current folder:
 nmap <F9> :source Session.vim<CR>
 nnoremap <F5> :mksession!<CR>
-
 
 
 " Easier moving in tabs and windows
@@ -259,6 +262,14 @@ inoremap jj <Esc>l
 " If you forget to sudo edit something, this can make you sudo inside vim:
 cmap w!! w !sudo tee > /dev/null %
 " cmap w!! w !sudo dd of=%
+"
+
+" For coding C: (binary C, because the prefix c is already used by nerdcommenter)
+map <leader>bc :call C_compile ()<CR>
+map <leader>bcr :call C_compile_run ()<CR>
+
+map <leader>f :call ClearAllButMatches ()<CR>
+nmap <leader>r :Rename 
 
 " Prevent lazy pinky on the shift button
 :command W w
@@ -271,7 +282,7 @@ cmap w!! w !sudo tee > /dev/null %
 " Abbreviations:
 " Typing cmt is automatically expanded to this:
 iabb cmt # Comment - Entered on :r! date-JA by lys
-cabb what tabe /home/lys/linux/vim/basics.txt
+cabb what tabe /home/lys/linux/vim/vim.rst
 
 
 " FUNCTIONS:
@@ -287,6 +298,61 @@ function! Browser ()
    exec "Silent !firefox ".line
 endfunction
 
+
+" Switch between absolute and relative line numbers easily.
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunc
+
+" Compiles the current program you're inside:
+function! C_compile ()
+	exec "!gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
+endfunction
+
+" Compiles and runs the current program you're inside:
+function! C_compile_run ()
+	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
+	exec "!x/%:t:r"
+endfunction
+
+" Run python program from inside vim:
+autocmd FileType python map <F6> :!python %<CR>
+
+" SML:
+autocmd BufReadPost *.sml silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
+autocmd BufReadPost *.sig silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType sml setlocal makeprg=mosml\ -P\ full\ '%'
+
+
+" TESTING GROUNDS
+"
+function! ClearAllButMatches()
+    let old = @c
+    let @c=""
+    %s//\=setreg('C', submatch(0), 'l')/g
+    %d _
+    put c
+    0d _
+    let @c = old
+endfunction
+
+" Defining the colorscheme last, because otherwise there was weird errors
+colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
+
+command! -bar -nargs=1 -bang -complete=file Rename :
+  \ let s:file = expand('%:p') |
+  \ setlocal modified |
+  \ keepalt saveas<bang> <args> |
+  \ if s:file !=# expand('%:p') |
+  \   call delete(s:file) |
+  \ endif |
+  \ unlet s:file
+
+" GRAVEYARD:
 
 " I started with a project of saving sessions globally somewhere, and
 " generating the name on the basis of a hash of the directory, reduced to
@@ -310,70 +376,3 @@ endfunction
 "  end
 "endfunction
 " autocmd VimLeave * call SaveSession()
-
-
-" Switch between absolute and relative line numbers easily.
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-  else
-    set relativenumber
-  endif
-endfunc
-
-" For coding C: (binary C, because the prefix c is already used by nerdcommenter)
-map <Leader>bc :call C_compile ()<CR>
-map <Leader>bcr :call C_compile_run ()<CR>
-
-" Compiles the current program you're inside:
-function! C_compile ()
-	exec "!gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
-endfunction
-
-" Compiles and runs the current program you're inside:
-function! C_compile_run ()
-	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
-	exec "!x/%:t:r"
-endfunction
-
-" Sort CSS properties
-nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
-
-" Run python program from inside vim:
-autocmd FileType python map <F6> :!python %<CR>
-
-" SML:
-autocmd BufReadPost *.sml silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
-autocmd BufReadPost *.sig silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
-autocmd FileType sml setlocal makeprg=mosml\ -P\ full\ '%'
-
-
-" TESTING GROUNDS
-"
-function! ClearAllButMatches()
-    let old = @c
-    let @c=""
-    %s//\=setreg('C', submatch(0), 'l')/g
-    %d _
-    put c
-    0d _
-    let @c = old
-endfunction
-
-map <Leader>f :call ClearAllButMatches ()<CR>
-
-" Defining the colorscheme last, because otherwise there was weird errors
-colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
-
-command! -bar -nargs=1 -bang -complete=file Rename :
-  \ let s:file = expand('%:p') |
-  \ setlocal modified |
-  \ keepalt saveas<bang> <args> |
-  \ if s:file !=# expand('%:p') |
-  \   call delete(s:file) |
-  \ endif |
-  \ unlet s:file
-
-nmap <Leader>r :Rename 
-
-" GRAVEYARD:
