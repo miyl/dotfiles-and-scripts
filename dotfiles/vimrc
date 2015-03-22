@@ -10,14 +10,7 @@
 " properly set to work with the Vim-related packages.
 runtime! archlinux.vim
 
-let g:rehash256=1
-
-
-" If you prefer the old-style vim functionalty, add 'runtime! vimrc_example.vim'
-" Or better yet, read /usr/share/vim/vim74/vimrc_example.vim or the vim manual
-" and configure vim to your own liking!
-
-" Vundle
+" VUNDLE BEGIN
 "
 "set guifont=Monaco
 
@@ -30,10 +23,9 @@ filetype off                   " required!
 " filetype plugin on
 
 set rtp+=/home/lys/.vim/bundle/Vundle.vim/
-call vundle#rc()
+call vundle#begin()
 
 " let Vundle manage Vundle
-" required! 
 Bundle 'gmarik/vundle'
 
 Bundle 'delimitMate.vim'
@@ -47,12 +39,17 @@ Bundle 'Valloric/MatchTagAlways'
 Bundle 'bkad/CamelCaseMotion'
 Bundle 'Shougo/unite.vim'
   Bundle 'Shougo/vimproc.vim'
+Bundle 'tpope/vim-fugitive'
 " Bundle 'rking/ag.vim'
 "   Bundle 'ggreer/the_silver_searcher'
 " Bundle 'ZenCoding.vim'
-" Bundle 'tpope/vim-fugitive'        "Integrates git into vim.
 " Consider the Command-T plugin, which navigates files easily. Similar to unite?
 " Bundle 'wincent/Command-T'
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+" VUNDLE END
 
 " Ultisnips:
 
@@ -77,6 +74,8 @@ let g:mta_filetypes = {
 
 
 " SETTINGS
+
+let g:rehash256=1
 
 if has('gui_running')
   " Make shift-insert work like in Xterm
@@ -154,8 +153,6 @@ set smartindent " smartindent automatically inserts one extra level of indentati
 
 " Vim has some strange behaviour of autoindenting like crazy when you paste text into it, if autoindent is enabled. This should simplify switching autoindent on and off, which is at least some kind of solution.
 " showmode makes vim show what mode you're in, except for normal mode.
-nnoremap <F2> :set invpaste paste?<CR>
-"set pastetoggle=<F2>
 set showmode
 
 " Prevent auto indentation when pasting from clipboard. Not sure how this works, but worth a try if it automatically detects pasting.
@@ -185,10 +182,16 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
-map <F1> <Esc> " Because of pesky help. Could be used for something else though?
-
+noremap <F1> :call NumberToggle()<CR>
+inoremap <F1> <Esc>:call NumberToggle()<CR>
+nnoremap <F2> :set invpaste paste?<CR>
 map <F3> :NERDTreeToggle<Return>
-map <F5> :set invnumber<CR>
+map <F4> :set invnumber<CR>
+" Save and load the currently opened windows and files in the current folder.
+nmap <F9> :source Session.vim<CR>
+nnoremap <F5> :mksession!<CR>
+
+
 
 " Easier moving in tabs and windows
 " Use H J K L while holding down Ctrl.
@@ -231,6 +234,9 @@ nmap æ gT
 nmap ø gt
 " nnoremap <S-ø> :tabnew
 
+" CTRL-g should show the full path of the current file:
+nnoremap <C-g> 1<C-g>
+
 nnoremap <leader>n :call NumberToggle()<cr>
 
 " Unite.vim: Search for files by name:
@@ -243,7 +249,8 @@ nnoremap <space>/ :Unite grep:.<cr>
 " CTRL-N for word completion is too weird. Maybe this is a little bit better?:
 imap ½½ <C-n>
 
-imap ii <C-[>: " Go directly from insert mode to command mode (:i)
+" Go directly from insert mode to command mode (:i)
+imap ii <C-[>:
 
 " Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
 " used in actual words):
@@ -281,9 +288,6 @@ function! Browser ()
 endfunction
 
 
-" Save and load the currently opened windows and files in the current folder.
-nmap <F4> <ESC>:call LoadSession()<CR>
-
 " I started with a project of saving sessions globally somewhere, and
 " generating the name on the basis of a hash of the directory, reduced to
 " maybe 6 characters. Then it will perform this same hash when trying to load
@@ -293,25 +297,25 @@ nmap <F4> <ESC>:call LoadSession()<CR>
 " created, mainly for the purpose of getting an overview of what projects are
 " saved in the directory. I'm thinking of using md5.
 
-let s:sessionloaded = 0
-function LoadSession()
+" let s:sessionloaded = 0
+" function LoadSession()
 "  source ~/.vimsessions/Session.vim
-  source Session.vim
-  let s:sessionloaded = 1
-endfunction
-function SaveSession()
-  if s:sessionloaded == 1
+"  source Session.vim
+  "let s:sessionloaded = 1
+"endfunction
+"function SaveSession()
+  "if s:sessionloaded == 1
 "    mksession! ~/.vimsessions/
-    mksession!
-  end
-endfunction
-autocmd VimLeave * call SaveSession()
+"    mksession!
+"  end
+"endfunction
+" autocmd VimLeave * call SaveSession()
 
 
 " Switch between absolute and relative line numbers easily.
 function! NumberToggle()
   if(&relativenumber == 1)
-    set number
+    set norelativenumber
   else
     set relativenumber
   endif
