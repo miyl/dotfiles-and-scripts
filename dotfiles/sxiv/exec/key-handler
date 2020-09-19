@@ -1,0 +1,171 @@
+#!/usr/bin/env sh
+
+oneerr() {
+  notify-send "The requested command can only be called on a single file, and multiple files are currently marked"
+}
+
+# First save the key pressed for use in the CASE below
+key=$1
+
+while read file; do
+  arr="$arr|$file"
+done;
+oldIFS=$IFS
+IFS="|"
+set -- $arr
+shift # Due to the way I assign above, the first element is an empty string, therefore this step
+
+case "$key" in
+  # FIRST: Handle commands that should prompt once and then mass apply to all files
+  # Putting it here to not call mv for each argument when they go to the same destination
+  "M")
+    #[ "$key" = "M" ] && name="$(printf '%s\n' "" | dmenu -i -p "Please type in the new directory for $file. Leave empty to leave unchanged.")"
+    #[ "$key" = "M" ] && name="$(rofi  -show fb -modi fb:../Examples/rofi-file-browser.sh)
+    # Unlike the above this has auto completion
+    [ "$key" = "M" ] && name="$(pd)"
+    # Leave path unchanged if an empty string is received
+    if ! [ "" = "$name" ]; then
+      # Get the first character of what was inputted
+      c=$(echo "$name" | cut -c1)
+      # If the new name stars with / ~ don't prepend the file's current path, since it's not relative
+      if [ "$c" = "/" ] || [ "$c" = "~" ]; then
+        mv $* "$name"
+        # Otherwise it IS relative (well except e.g. $HOME but I rarely use that when I have ~)
+      else
+        # This moves them up relative to where each of them are, which are different places if they aren't all currently in the same dir
+        #mv $* "$name"
+        # This solution ensures that all files are moved to the same dir, rather than simply taking, say, all files and
+        # moving them two directories up from wherever each of them currently are
+        mv $* "$(dirname "$1")/$name"  
+        #mv $* "$(dirname "$file")/$name"
+      fi
+    fi
+  ;;
+
+  # SECOND: Handle commands that should be handled individually - like renames
+  #"b"|"B"|"m"|"r"|"R"|"y"|"Y"|"d"|"g"|"c"|"C"|"e"|"E"|"h")
+  *)
+    # Loop over the contents of arr, which has been written to $@
+    i=0   # Used to know when it's the last argument, which is special for the yank operation. See above for why.
+    for file in "$@"; do
+      # For debugging
+      # echo $file > /tmp/key-handler-output
+
+      i=$((i+1)) # POSIX increment. Yeah, it's ugly.
+      case "$key" in
+        "y") # copy relative path(?) to clipboard
+          copyOut="${copyOut} \"${file}\""
+          if [ $i = $# ]; then
+            echo -n "$copyOut" | xclip -selection clipboard &&
+            notify-send "$copyOut copied to clipboard" & 
+          fi
+        # Alternate, simpler way which could be handled in the section before the loop, but this doesn't add "" around them, so
+        #  echo $* | xclip -selection clipboard &&
+        #  # This prints the "|" (IFS) because $* is in quotes, but those aren't in the clipboard so no real problem:
+        #  notify-send "$* copied to clipboard" & 
+        ;;
+
+
+        # Unlike "y" this has to be handled here because we need to go through each argument and change them to the file's full path
+        # Go through all arguments and get the full path for each, and when the last one is reached pass them all to
+        # xclip as one, each file being surrounded by "" because the paths may contain spaces, and they aren't \ escaped
+        "Y") # copy path to clipboard, the full path resolving symlinks
+          copyOut="${copyOut} \"$(readlink -f "$file")\""
+          if [ $i = $# ]; then
+            printf '%s' $copyOut | xclip -selection clipboard &&
+            notify-send "$copyOut copied to clipboard" & 
+          fi
+        ;;
+
+        # Set as background
+        "b") set_bg.sh "$file" ;;
+        "B") cp "$file" ~/BGs/ && set_bg.sh ~/BGs/"$file" ;;
+
+        #"c")
+        #  [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
+        #  [ -z "$destdir" ] && exit
+        #  cp "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file copied to $destdir." &
+        #  ;;
+
+        #"m")
+        #  [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Move file(s) to where?" | sed "s|~|$HOME|g")"
+        #  [ -z "$destdir" ] && exit
+        #  mv "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file moved to $destdir." &
+        #  ;;
+
+        "m")
+          #name="$(zenity --entry --display=:0.0 --text "Rename "$file" to")" 2> /dev/null
+          name="$(printf '%s\n' "./" "$file" | dmenu -i -p "Please type in the new name for $file. Leave empty to leave unchanged.")"
+          # Leave file name unchanged if an empty string is received
+          if ! [ "" = "$name" ]; then
+            # Get the first character of what was inputted
+            c=$(echo "$name" | cut -c1)
+            # If the new name stars with / ~ don't prepend the file's current path, since it's not relative
+            if [ "$c" = "/" ] || [ "$c" = "~" ]; then
+              mv "$file" "$name"
+              # Otherwise it IS relative (well except e.g. $HOME but I rarely use that when I have ~)
+            else
+              mv "$file" "$(dirname "$file")/$name"
+            fi
+          fi
+          ;;
+
+        "r")  # rotate clockwise
+          if [ "$(file -ib "$file" | cut -d';' -f 1)" = 'image/jpeg' ]; then
+            #exiftool -Orientation='Rotate 90 CW' -overwrite_original "$file"
+            jpegtran -rotate 90 -outfile "$file" "$file"
+          else
+            mogrify -rotate 90 "$file"
+          fi
+        ;;
+
+        "R")  # rotate counter clockwise
+          if [ "$(file -ib "$file" | cut -d';' -f 1)" = 'image/jpeg' ]; then
+            #exiftool -Orientation='Rotate 90 CCW' -overwrite_original "$file"
+            jpegtran -rotate 270 -outfile "$file" "$file"
+          else
+            mogrify -rotate -90 "$file"
+          fi
+        ;;
+
+        # TODO: Do I need/want this? If so it should be done losslessly for jpgs like the others
+        #"f") mogrify -flop "$file"  ;;
+
+        # delete, changed it to default to yes
+        "d") [ "$(printf "Yes\\nNo" | dmenu -i -p "Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted." ;;
+
+        # crop, save as a screenshot and don't overwrite. uses my maim wrapper script
+        # NOT ideal though, because if the picture is zoomed out this crop will also reduce the picture size to whatever its
+        # displayed at
+        # Added BREAK in these two because they won't work on a range of images, only one a time
+        "c") if [ $# -eq 1 ] && command -v mim; then mim -s; else oneerr; fi ;;
+
+        # crop, overwrite the original
+        "C") if [ $# -eq 1 ] && command -v maim; then maim -s "$file"; else oneerr; fi ;;
+
+        # edit with gimp
+        "g") if command -v gimp; then gimp "$file" & fi ;;
+
+        # exif clean, optionally resize
+        "e") img_exifclean "$file" ;;
+        "E") img_exifclean_resize -n "$file" ;;
+
+        *) notify-send "Available commands:" "
+m      Rename/Move file(s) to a separate locations (prompts once per file) 
+M      Move each file to the same location (prompts once for all files)
+r/R    Rotate: Clockwise (r) / Counter clockwise (R)
+c/C    Crop: Save as a new screenshot (c) / Overwrite original (C). Note: This resizes them if they aren't displayed at 100%!
+b/B    Set as background: Just set as bg (b) / Copy to BGs directory and then set as bg (B)
+e/E    Clean exif: Exif only and overwrite original (e) / Exif + resize to new file under 'upload-ready' dir (E)
+d      Delete
+g      Edit with Gimp
+y/Y    Yank location with relative (y) / or absolute (Y) path
+*      This help text
+"    ;;
+
+      esac
+    done
+;; esac
+
+# Cleanup: Reset IFS to whatever it was before overwriting it
+IFS=$oldIFS

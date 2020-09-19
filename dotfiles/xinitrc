@@ -1,4 +1,11 @@
-#!/bin/sh
+#!/bin/bash
+
+# From the man page:
+# Note, when using a .xserverrc script be sure to ``exec'' the real X server. Failing to do this can make the X server slow to start and exit.
+# Programs which are run by .xinitrc should be run in the background if they do not exit right away, so that they don't prevent other programs from starting up. 
+# However, the last long-lived program started (usually a window manager or terminal emulator) should be left in the foreground so that the script won't exit (which indicates that the user is done and that xinit should exit).
+
+# {{{ DEFAULTS
 
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -26,22 +33,31 @@ fi
 # start some nice programs
 
 if [ -d /etc/X11/xinit/xinitrc.d ] ; then
- for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-  [ -x "$f" ] && . "$f"
- done
- unset f
+  for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
 fi
 
+### }}}
 
 
-# Source the script that generates the info in the dwm menu bar, since it's basically its own module:
-source /home/lys/sh/X_infobar.sh &
 
-# Set keyboard layout to danish. Probably suboptimal, but it works.
-setxkbmap dk
+### {{{ My config
+
+# Running setxkbmap here as well even though the keymap is also set by /etc/X11/xorg.conf.d/00-keyboard.conf, because apparently xbindkeys depends on the set keymap. Without this fx. Mod4+Plus doesn't work before killing and restarting xbindkeys
+#setxkbmap dk &
+
+# Boot numlock on:
+numlockx &
+
+# It appears mod4+dead_acute works when I put it this far down xinitrc, but not when I put it just above or below setxkbmap, for some reason. Update: Just moved the shortcut away from dead_acute
+sxhkd &
+
+# Enable xbindkeys, which maps some keysyms to commands on my keyboard, so fx. the volume and audio controls work. See ~/.xbindkeysrc
+#xbindkeys & # should run after setxkbmap from experience
 
 # Autocutsel syncronisation between primary selection and the clipboard.
-
 if [ -x /usr/bin/autocutsel ]; then
     #this will keep the clipboard in sync
     #   with the primary buffer
@@ -52,38 +68,59 @@ if [ -x /usr/bin/autocutsel ]; then
     autocutsel -selection PRIMARY -fork
 fi
 
-# Enable Terminus & artwiz in Arch ( / dwm ):
+# Enable Terminus & artwiz in X:
 xset +fp /usr/share/fonts/local
 xset +fp /usr/share/fonts/artwiz-fonts
 xset fp rehash
-
-# - Set background image:
-# feh --bg-scale /media/data/Video/Billeder/BGs/dwm_bg2.png &
-# /home/lys/bin/astronomy_potd_wallpaper.sh
-#feh --bg-center /mnt/data/Video/Billeder/BGs/friendship-is-magic-fanart.png
-feh --bg-center /mnt/data/Video/Billeder/BGs/this_city_needs_a_hero.jpg
 
 # Disables screen blanking (0), suspends the screen after 6 minutes and then turns it off after 7.
 # More info: http://www.shallowsky.com/linux/x-screen-blanking.html
 xset dpms 0 360 420
 
+# Set background image:
+"$SH_DIR"/bg/set_bg.sh
+
+# Enable fcitx (used for korean/japanese/chinese input)
+#export GTK_IM_MODULE=fcitx
+#export QT_IM_MODULE=fcitx
+#export XMODIFIERS=@im=fcitx
+
+# Ibus
+#export GTK_IM_MODULE=ibus
+#export QT4_IM_MODULE=xim
+#export QT_IM_MODULE=xim
+#export XMODIFIERS=@im=ibus
+
+
 # Disables wake on lan:
 # ethtool -s eth0 wol d
 
-# Start the urxvt daemon:
-urxvtd --quiet --opendisplay --fork
+# Enable wifi automatically until I get LAN at home again
+#sudo $SH_DIR/net.sh -q w h &
+sudo "$SH_DIR"/wless_auto.sh &
 
-# Boot numlock on:
-numlockx &
+# Disable eDP1 if HDMI1 is connected at X startup
+"$SH_DIR"/xrandr_startup_check.sh & 
+
+# Start the urxvt daemon:
+#urxvtd --quiet --opendisplay --fork
 
 # Unclutter - hide the cursor after some seconds of mouse inactivity.
-exec unclutter -root &
+unclutter -root &
 
-#enable mouse keys (activate via SHIFT+NUMLOCK and disable again the same way)
-setxkbmap -option keypad:pointerkeys
+# There's some weird thing where this reminder causes a notify-send message to just stays on screen permanently, not
+# being clickable and thus removable even. Changing the background removes it though
+# This pointed to a symlink (~/.reminders) earlier but regarding the ONCE keyword it seemingly checks and attempts to update the timestamp on the symlink and not the original file, and the symlink's timestamp is not updated with touch it seems, so I refer to the original file instead here
+#remind -t6 $HOME/dotfiles/.reminders &
+remind $HOME/dotfiles/.reminders
 
-# Enable xbindkeys, which maps some keysyms to commands on my keyboard, so the volume and audio controls work. See ~/.xbindkeysrc
-xbindkeys
+# dwm:
+# Source the script that generates the info in the dwm menu bar, since it's basically its own module:
+#source $SH_DIR/X_infobar.sh &
+#exec $SH_DIR/startdwm.sh
 
-#exec dwm
-/home/lys/sh/startdwm.sh
+# xmonad:
+#xsetroot -cursor_name left_ptr
+. "$SH_DIR"/battery_warning.sh &
+#exec xmonad
+exec i3

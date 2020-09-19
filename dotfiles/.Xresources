@@ -1,12 +1,17 @@
+! miyalys: mostly copied from:
 ! anrxc X application resource database
 ! Source: http://sysphere.org/~anrxc/
 
 !{{{ XFT
-  Xft.dpi:       96
+!
+  Xft.autohint: 0
+  Xft.lcdfilter: lcddefault
+  Xft.hintstyle: hintslight
+! Xft.hintstyle: hintfull
+  Xft.hinting: 1
   Xft.antialias: 1
-  Xft.hinting:   1
-  Xft.hintstyle: hintfull
-  Xft.rgba:      rgb
+  Xft.rgba: rgb
+! Xft.dpi:       96
 !}}}
 
 !{{{ URXVT
@@ -35,9 +40,11 @@
   URxvt.cutchars:        '"'()*<>[]{|}
 
 ! Appearance
-  !urxvt*font:         xft:Terminus:size=10
-  urxvt*font:         xft:Inconsolata:size=11
-  urxvt*boldFont:     xft:Inconsolata:size=11:bold
+! urxvt*font:         -misc-inconsolata-medium-*-*-*-0-*-*-*-*-*-iso10646-*
+! urxvt*boldFont:     -misc-inconsolata-bold-*-*-*-0-*-*-*-*-*-iso10646-*
+! urxvt*font:         xft:Inconsolata Nerd Font:size=11:antialias=true
+  urxvt*font:         xft:Inconsolata:size=11:antialias=true
+  urxvt*boldFont:     xft:Inconsolata:size=11:bold:antialias=true
   
 ! Cursor
   URxvt.cursorColor: #DCDCCC
@@ -49,6 +56,16 @@
   !urxvt.transparent:true
 !}}}
 
+!{{{ st
+
+ st*.background: #181818
+! st*.background: #111111
+! For some reason these font specifications dont work properly in the terminal, and the result is hideous the the font itself is nice. It probably works better in a gui vim?
+! st*font:         xft:Fira Mono:size=10:antialias=true
+!  st*boldFont:     xft:Fira Mono:size=10:bold:antialias=true
+
+!}}}
+
 !{{{ Terminal colors
 
 ! See more color schemes here:
@@ -58,28 +75,37 @@
 ! pink: #F92672
 ! purple: #AE81FF
 ! lime: #A6E22E
+!
+! Delete URxvt in front to make it apply to other terms, like st as well. looks ugly in st though, for some reason, so thats why I added urxvt in front
+!
+  URxvt*.background:  #1f1f1f
+  URxvt*.foreground:  #dcdccc
 
-! Theme Thirteen
-  *.background:  #1f1f1f
-  *.foreground:  #dcdccc
-  *color0:     black
-  *color1:     orange1
-  *color2:     #A6E22E
-  *color3:     yellow1
-  *color4:     blue1
-  *color5:     magenta1
-  *color6:     rgb:cyan1
-  *color7:     white
-  *color8:     rgb:ff/d3/9b
-  *color9:     rgb:ff/82/47
-  *color10:     #AE81FF
-  *color11:    rgb:87/ce/fa
-  *color12:    #F92672    
-  *color13:    grey93
-  *color14:    grey93
-  *color15:    grey93
+! Plaintext color
+  URxvt*color7:     white
+! Directories
+  URxvt*color12:    #F92672
+! Used as the font BACKGROUND color for something like 777 permissions (like every single file on the data partition currently)
+  URxvt*color2:     #A6E22E
+! Used as the font TEXT color for something like 777 permissions (like every single file on the data partition currently)
+  URxvt*color4:     blue1
+! Files marked executable + PS1 arrow
+  URxvt*color10:    #AE81FF
+! Symlinks + PS1 path
+  URxvt*color14:    grey93
+
+  URxvt*color0:     black
+  URxvt*color1:     orange1
+  URxvt*color3:     yellow1
+  URxvt*color5:     magenta1
+!  URxvt*color6:     rgb:cyan1
+  URxvt*color6:     cyan1
+  URxvt*color8:     rgb:ff/d3/9b
+  URxvt*color9:     rgb:ff/82/47
+  URxvt*color11:    rgb:87/ce/fa
+  URxvt*color13:    grey93
+  URxvt*color15:    grey93
 !}}}
-
 
 !{{{ XCLOCK
   xclock*update:     1
@@ -90,9 +116,8 @@
   xclock*geometry:   120x120+1160+15
 !}}}
 
-
 !{{{ XMESSAGE
-  Xmessage*font:                  -xos4-terminus-medium-*-*-*-12-*-*-*-*-*-iso8859-2
+! Xmessage*font:                  -xos4-terminus-medium-*-*-*-12-*-*-*-*-*-iso8859-2
   Xmessage*background:            #3F3F3F
   Xmessage*foreground:            #F0DFAF
   Xmessage*form.*.shapeStyle:     rectangle
@@ -101,56 +126,6 @@
   !Xmessage.form.message.Scroll:  WhenNeeded
   Xmessage*Buttons:               Quit
   Xmessage*defaultButton:         Quit
-  !Xmessage*geometry:             +20+20
-!}}}
-
-
-!{{{ XFONTSEL
-  XFontSel*menu*showUnselectable:       false
-  XFontSel*sampleText.background:      TEXTBG
-  XFontSel*MenuButton.shadowWidth:          0
-  XFontsel*Toggle*ToggleStyle:          check
-  XFontsel*MenuButton*Justify:           left
-  XFontsel*MenuButton*MenuButtonStyle: select
-  xfontsel*Font: -xos4-terminus-medium-*-*-*-12-*-*-*-*-*-iso8859-2
-  xfontsel.pane.commandBox.quitButton.background:           #777777
-  xfontsel.pane.commandBox.quitButton.foreground:           snow
-  xfontsel.pane.commandBox.ownButton.background:            orange3
-  xfontsel.pane.commandBox.ownButton.foreground:            snow
-  xfontsel.pane.commandBox.countLabel.background:           snow
-  xfontsel.pane.viewPort.sampleText.background:             #777777
-  xfontsel.pane.viewPort.sampleText.foreground:             snow
-  xfontsel.pane.fieldBox.field0.background:  #777777
-  xfontsel.pane.fieldBox.field0.foreground:  snow
-  xfontsel.pane.fieldBox.field1.background:  #777777
-  xfontsel.pane.fieldBox.field1.foreground:  snow
-  xfontsel.pane.fieldBox.field2.background:  #777777
-  xfontsel.pane.fieldBox.field2.foreground:  snow
-  xfontsel.pane.fieldBox.field3.background:  #777777
-  xfontsel.pane.fieldBox.field3.foreground:  snow
-  xfontsel.pane.fieldBox.field4.background:  #777777
-  xfontsel.pane.fieldBox.field4.foreground:  snow
-  xfontsel.pane.fieldBox.field5.background:  #777777
-  xfontsel.pane.fieldBox.field5.foreground:  snow
-  xfontsel.pane.fieldBox.field6.background:  #777777
-  xfontsel.pane.fieldBox.field6.foreground:  snow
-  xfontsel.pane.fieldBox.field7.background:  #777777
-  xfontsel.pane.fieldBox.field7.foreground:  snow
-  xfontsel.pane.fieldBox.field8.background:  #777777
-  xfontsel.pane.fieldBox.field8.foreground:  snow
-  xfontsel.pane.fieldBox.field9.background:  #777777
-  xfontsel.pane.fieldBox.field9.foreground:  snow
-  xfontsel.pane.fieldBox.field10.background: #777777
-  xfontsel.pane.fieldBox.field10.foreground: snow
-  xfontsel.pane.fieldBox.field11.background: #777777
-  xfontsel.pane.fieldBox.field11.foreground: snow
-  xfontsel.pane.fieldBox.field12.background: #777777
-  xfontsel.pane.fieldBox.field12.foreground: snow
-  xfontsel.pane.fieldBox.field13.background: #777777
-  xfontsel.pane.fieldBox.field13.foreground: snow
-  xfontsel.pane.fieldBox*foreground:         #000000
-  xfontsel.pane.fieldBox.MenuButton.borderWidth:   1
-  xfontsel.pane.fieldBox.MenuButton.internalHeight:1
-  xfontsel.pane.fieldBox.MenuButton.internalWidth: 2
-  xfontsel.pane.fieldBox.MenuButton.shapeStyle:    rectangle
+  Xmessage*geometry:              300x150
+  Xmessage*center:                1
 !}}}

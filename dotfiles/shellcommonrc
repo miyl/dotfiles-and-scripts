@@ -1,0 +1,168 @@
+# Reused by multiple shells, e.g. zsh, bash, etc.
+ 
+## id returns the user id of the user. 0 is root.
+ID=$(id -u)
+if [[ -z $DISPLAY && ! -a /tmp/.X11-unix/X0 && $ID != 0 && $ID != 1002 ]]; then
+  exec startx
+fi
+
+# Loading my aliases
+. $HOME/dotfiles/aliases
+
+# {{{ SETTINGS
+
+# vi mode settings - zsh specific vi mode settings are in zshrc
+# set -o vi
+
+# }}}
+
+
+
+# {{{ FUNCTIONS
+
+# FZF:
+# It seems these DO affect FZF_COMPLETION_TRIGGER!
+# For some reason it doesn't seem to expand FD_OPTIONS properly if I put it here, so instead I just verbatim copy it here
+# Src: https://github.com/junegunn/fzf
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" --exclude node_modules --exclude "/target/" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+sim() {
+    sudoedit "$*"
+}
+
+# For checking if a process is running faster
+psa() {
+  ps aux | grep $*
+}
+
+# Create archive
+compress() {
+  if [ -n "$1" ]; then
+      FILE=$1
+      case $FILE in
+        *.tar) shift && tar cf $FILE $* ;;
+        *.tar.bz2) shift && tar cjf $FILE $* ;;
+        *.tar.gz) shift && tar czf $FILE $* ;;
+        *.tar.xz) shift && tar cf - $* | xz -8 > $FILE ;;
+        *.tgz) shift && tar czf $FILE $* ;;
+        *.zip) shift && zip -r $FILE $* ;;
+        *.rar) shift && rar $FILE $* ;;
+      esac
+  else
+    echo "usage: compress <archive.tar.gz> <files>"
+  fi
+}
+
+#Unpack archive
+unpack() {
+  if [ -f $1 ]; then
+    case $1 in
+      *.tar.bz2) tar xjf $1 ;;
+      *.tbz2) tar xjf $1 ;;
+      *.tar.gz) tar xzf $1 ;;
+      *.tgz) tar xzf $1 ;;
+      *.bz2) bunzip2 $1 ;;
+      *.rar) unrar x $1 ;;
+      *.gz) gunzip $1 ;;
+      *.xz) unxz $1 ;;
+      *.tar) tar xf $1 ;;
+      *.zip) unzip $1 ;;
+      *.deb) ar vx $1 data.tar.xz && \             # Only unpack the data.tar.xz from the .deb archive
+             dir=$(basename -s .deb $1) && \       # Remove the extension from the filename to get a name for a directory for the unpacked contents
+             mkdir $dir && \                       # Create that dir
+             mv data.tar.xz $dir/                  # Move data.tar.xz into it
+             cd $dir && \                          # cd into it
+             unpack data.tar.xz && \               # Unpack its containing files (two steps)
+             unpack data.tar && \
+             rm data.tar ;;                        # Delete the data.tar (intermediate file) that remains
+      *.zst) zstd -d $1 && \
+             res=$(basename -s .zst "$1") && \
+             unpack "$res "$1")" && \
+             rm "$res" ;;                          # Delete the intermediate file
+      *.Z) uncompress $1 ;;
+      *.7z) 7z x $1 ;;
+      *) echo -e ${YELLOW}"'$1' cannot be unpacked"${RESET} ;;
+    esac
+  else
+    echo -e ${YELLOW}"'$1' is an invalid file"${RESET}
+  fi
+}
+
+# Why have this as a function instead of a symlink? To enforce that the script is sourced, so it runs in the current shell and not a subshell, so cd'ing is done in the current shell, rather than
+# being uselessly done in a subshell.
+#mnt() {
+#  source /home/$USER/sh/mnt.sh "$@"
+#}
+
+# Easily get the duration of an audio or video file:
+# The ^ is there to exclude information like 'Track Duration' and the double spaced info like '  Duration Value'
+dur() {
+  exiftool "$@" | grep '^Duration  ' | cut -d':' -f 2-
+}
+
+umnt() {
+  sudo $HOME/sh/mount/umnt.sh
+}
+
+# Two functions for more easily overriding the HostName given in SSH config, for devices that may sometimes receive their IP from DHCP (fx. phones)
+ssho() {
+  if [ -n $1 ]; then
+    ssh -o "HostName $1" "${@:2}"
+  else
+    echo "ssho needs one argument: An IP/hostname to override with" 
+  fi
+}
+
+scpo() {
+  if [ -n $1 ]; then
+    scp -o "HostName $1" "${@:2}"
+  else
+    echo "scpo needs one argument: An IP/hostname to override with" 
+  fi
+}
+
+# See vim document on 'one vim session to rule them all'
+#vimserv() {
+#  SERVLIST=`vim --serverlist`
+#  if [ -z $SERVLIST ]; then
+#    vim -p --servername VIM $*
+#  else
+#    if [ $SERVLIST != "GVIM" ]; then
+#      vim --remote-tab-silent $*
+#    else
+#      # gvim is now in itself an alias to gvim --remote-tab-silent, so it shouldn't be written here too
+#      gvim $*
+#    fi
+#  fi
+#}
+
+# TIME ELSEWHERE:
+
+# Convert an inputtet time somewhere else to local time (CET).
+timehere() {
+  if [[ -z $1 || -z $2 ]]; then
+    printf '%s\n' "timehere takes two arguments: A time and a timezone, in that order." \
+                  "Example inputs:" \
+                  "timehere 17 +5" \
+                  "timehere 17:30 EST" 
+  else
+    date -d "$1 $2" +'Time: %H:%M:%S %Z'
+  fi
+}
+
+# Used for CSGO. To be easily hardcoded to a specific timezone, so all it needs is a time of day.
+csgo() {
+  timehere $1 "-8" # AKA PST
+}
+
+# Autojump:
+[[ -s /etc/profile.d/autojump.sh ]] && . /etc/profile.d/autojump.sh
+
+# }}}

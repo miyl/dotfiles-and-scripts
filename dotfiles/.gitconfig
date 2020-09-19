@@ -1,5 +1,6 @@
-[user]
-	name = Marcus Miyalys
+[init]
+  # The default name for the first branch created. Default is "master".
+  defaultBranch = main
 [push]
 	default = simple
 # Track and untrack files more easily. Useful when git has been tracking a file for a while, but you no longer want it in the index:
@@ -7,9 +8,16 @@
   track = update-index --no-assume-unchanged
   untrack = update-index --assume-unchanged
 
-  # Compress log to show only one line per commit, and show only the 15 latest commits.
-  lg = log --oneline -n 15
+  # Compress log to show only one line per commit, and show only the specified latest commits.
+  # Also try git shortlog
+  lg = log --format='%Cred %h - %an:%Creset %s' -n 15 # log for project with others - includes author
+  lgp = log --oneline -n 15                           # log for personal projects - omits author
   co = checkout
+  b = branch                                          # make it easier to check what branch I'm currently on.
+
+  udiff = diff --patience -C -C HEAD@{upstream}
+  ushow = show @ HEAD@{upstream}
+  lsu = ls-files . --exclude-standard --others    # Lists untracked files not gitignored, ie. those that would be added by git add -A. Much faster than actually doing git add -A and git status if they're huge binary files fx.
 
 [color]
 	ui = true
@@ -17,3 +25,5 @@
 	tool = vimdiff
 [merge]
 	tool = vimdiff
+[core]
+	excludesfile = /home/i/.gitignore_global

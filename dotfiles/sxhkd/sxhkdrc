@@ -1,0 +1,140 @@
+# NOTES TO SELF:
+# It appears that maaaaybe comments aren't allowed between the keysym and the command it should execute. Not entirely
+# sure though.
+
+# Brightness controls - see this for more info: /sys/class/backlight/intel_backlight
+# XF86Launch8 is for the microsoft keyboard, BrightnessDown is for the laptop the last is mostly for other keyboards like logitech
+{XF86MonBrightnessDown, XF86Launch8, super + Down, XF86Launch9, XF86MonBrightnessUp, super + Up}
+  $HOME/sh/backlight.sh {d,d,d,i,i,i}
+
+# Increase / decrease brightness in larger steps
+{ctrl+super + Down, ctrl+super + Up}
+  $HOME/sh/backlight.sh {d a,i a}
+
+# Run network script wireless DHCP via windows + control + subtract on the keypad.
+super + KP_Subtract
+  sudo $HOME/sh/net.sh -q w
+
+# Run network script wireless static IP via windows + control + add on the keypad.
+super + KP_Add
+  sudo $HOME/sh/net.sh -q w h
+
+# Turn off monitor
+# It appears assigning multiple keys to one command cannot be listed after each other directly.
+{super + z, Scroll_Lock}
+  $HOME/sh/monoff.sh
+
+# Turn off monitor and lock
+ctrl+super + z
+  $HOME/sh/monoff.sh lock
+
+# Shutdown / restart / suspend
+{ctrl+super + Escape, shift+super + Escape}
+  shutdown {-h,-r} now
+
+super + Escape
+  slock & systemctl suspend
+
+# Screenshots! Uses my own maim wrapper
+Print
+  mim
+
+# Seems to require some time to pass after each execution, before it works again. weird.
+super + Print
+  mim -s
+
+# Adding the calculater prompt directly to xbindkeys instead of the WMs config
+# Using rofi because dmenu behaves unexpectedly in I3 at the moment, and maybe I should switch to rofi anyway
+super + x
+  rofi -dmenu -location 1 -lines 0 -width 30 -p 'Calculate:' | xargs echo | calc -p | xargs rofi -dmenu -location 1 -lines 0 -width 10 -p
+
+# TTS launcher, just for giggles
+super + t
+  rofi -dmenu -p "TTS: " | $HOME/applications/text-to-speech/gtts/run.sh --stdin
+  #"words=$(rofi -dmenu -p TTS:); $HOME/applications/gtts/text-to-speech/run.sh ${words}"
+
+super + y:
+  rofi -dmenu -p "English dictionary: " | $HOME/sh/dict.sh
+
+# Since firefox sound doesn't work for people with pure ALSA until the next version I've made/found this workaround
+# Moved theming from command to the rofi config at .config/rofi/config
+super + y
+  xclip -o | cut -d'%' -f 1 | $HOME/sh/yt/stdin_read.sh
+  #"rofi -dmenu -lines 0 -p YouTube -width 100 -location 1 | $HOME/sh/yt/stdin_read.sh"
+  #"rofi -p 'YouTube: ' -theme-str '#window { border:0; }' -dmenu | $HOME/sh/yt/stdin_read.sh"
+  # NEW method, reading directly from the clipboard instead! Xclip outputs a trailing % for that reason, so that's what cut removes
+
+# Unbound in wm and bound via xbindkeys instead to have a setup that's more wm independent (easier to switch)
+# Used to run st, and before that termite
+super + Return
+  kitty
+
+# Switch between dvorak and danish keyboard map! - Now switching via double shift, set up in Xorg.
+#XF86Launch7
+  #"$HOME/sh/dvorak.sh"
+
+
+### AUDIO CONTROLS ###
+
+# Increase and decrease volume
+{XF86AudioRaiseVolume, super + v, XF86AudioLowerVolume, super + c}
+  $HOME/sh/audio/controls/volume_change.sh {-inc,-inc,ignored,ignored}
+
+# Start/stop media players. For cmus, vlc and deadbeef  (at least if they're set up correctly).
+# The second is the same thing but using the actual media key I have for it.
+{Pause, XF86AudioPlay}
+  $HOME/sh/audio/controls/start_stop.sh
+
+# Seek backwards/forwards in track
+# Previously used u/i but i unbound left/right from i3 to use them here instead
+{super + Left, super + Right}
+  $HOME/sh/audio/controls/seek.sh {b,ignored}
+
+# Previous/Next track. 
+{ctrl+super + Left, ctrl+super + Right}
+  $HOME/sh/audio/controls/prevnext.sh {p,ignored}
+
+# Mute, with media keys or without when using laptop keyboard
+{XF86AudioMute, super + ctrl + m}
+  amixer set Master {toggle,toggle}
+
+# From old dwm config. Good idea if it worked for deadbeef or if I switch back to cmus.
+#  { MODKEY|ctrlMask,			  XK_comma,  spawn,  SHCMD("cmus-remote -k -5") },
+#  { MODKEY|ctrlMask,			  XK_period, spawn,  SHCMD("cmus-remote -k +5") },
+ 
+# used to use dead_acute - to the right of the +? button next to the number row - but i've had issues binding to that key multiple times
+# super p is the same as in windows so that's convenient 
+super + p
+  $HOME/sh/xrandr_toggle_HDMI1.sh
+
+super + F10
+  $HOME/sh/audio/pulse_in_default_switch.sh
+
+super + F11
+  $HOME/sh/audio/pulse_out_default_switch.sh
+  # Old script using ALSA without pulseaudio
+  #"$HOME/sh/audio/alsa_default_switch.sh"
+
+
+# DVORAK:
+
+super + semicolon
+  $HOME/sh/monoff.sh
+
+ctrl + super + semicolon
+  $HOME/sh/monoff.sh lock
+
+
+# PROGRAMS
+
+# Microsoft Natural Ergonomic:
+
+# XF86 Launch 5-7 available, 8+9 used for brightness. Launch5 is labelled 1 on the keyboard while Launch9 is labelled 5.
+XF86Launch5
+  firefox
+
+XF86Launch6
+  thunderbird
+
+XF86Launch7
+  deadbeef

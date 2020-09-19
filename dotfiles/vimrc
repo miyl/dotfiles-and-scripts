@@ -1,4 +1,7 @@
+" {{{ Auto-generated stuff and mapleader
+ 
 " All system-wide defaults are set in $VIMRUNTIME/archlinux.vim (usually just
+"
 " /usr/share/vim/vimfiles/archlinux.vim) and sourced by the call to :runtime
 " you can find below.  If you wish to change any of those settings, you should
 " do it in this file (/etc/vimrc), since archlinux.vim will be overwritten
@@ -10,46 +13,194 @@
 " properly set to work with the Vim-related packages.
 runtime! archlinux.vim
 
-" VUNDLE BEGIN
-"
-"set guifont=Monaco
+" Sets the leader character, before anything starts referring to it:
+let mapleader = ","
 
-set nocompatible " Turns off strict vi compatibility:
+" NOTE: If changing username remember to update it across this script! The alternative would be using an environment variable or a vimscript variable for it, but it looks messy as it requires the execute command every time. 
+" So maybe a manual search and replace is crude but better?
 
-"Don't use the detect file type plugin:
-filetype off                   " required!
+" }}}
 
-" Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
-" filetype plugin on
 
-set rtp+=/home/lys/.vim/bundle/Vundle.vim/
-call vundle#begin()
+" DEIN PLUGIN MANAGER BEGIN {{{
 
-" let Vundle manage Vundle
-Bundle 'gmarik/vundle'
+" {{{ INITIAL CONFIG
 
-Bundle 'delimitMate.vim'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'SirVer/ultisnips'
-Bundle 'tpope/vim-surround'
-Bundle 'Valloric/MatchTagAlways'
-Bundle 'bkad/CamelCaseMotion'
-Bundle 'Shougo/unite.vim'
-  Bundle 'Shougo/vimproc.vim'
-Bundle 'tpope/vim-fugitive'
-" Bundle 'rking/ag.vim'
-"   Bundle 'ggreer/the_silver_searcher'
-" Bundle 'ZenCoding.vim'
-" Consider the Command-T plugin, which navigates files easily. Similar to unite?
-" Bundle 'wincent/Command-T'
+if &compatible
+  set nocompatible               " Be iMproved. miyalys: Turns off strict vi compatibility: NeoVim has this as default anyway, but seemingly doesn't care if set explicitly. 
+endif
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Required:
+set runtimepath+=/home/i/.vim/pluginss/repos/github.com/Shougo/dein.vim
 
-" VUNDLE END
+if !has('nvim')
+  let pluginBaseDir="/home/i/.vim/pluginss/vim"
+endif
+
+if has('nvim')
+  let pluginBaseDir="/home/i/.vim/pluginss/neovim"
+endif
+
+
+" Required:
+if dein#load_state(pluginBaseDir)
+  call dein#begin(pluginBaseDir)
+
+  " Let dein manage dein
+  " Required:
+  call dein#add('/home/i/.vim/plugins/repos/github.com/Shougo/dein.vim')
+
+" }}}
+
+  " Add or remove your plugins here like this:
+  "call dein#add('Shougo/neosnippet.vim')
+  "call dein#add('Shougo/neosnippet-snippets')
+
+  " Autocompletion
+  call dein#add('Shougo/deoplete.nvim')
+    if !has('nvim')
+      call dein#add('roxma/nvim-yarp')
+      call dein#add('roxma/vim-hug-neovim-rpc')
+    endif
+
+  " Automatically adds the corresponding closing bracket, single quote, double
+  " coute, backtick etc. when creating the first one. Kinda gets in the way
+  " fairly often though.
+  "call dein#add( 'Raimondi/delimitMate'
+   
+  " Much nicer motions:
+  call dein#add('Lokaltog/vim-easymotion')
+
+  " A within-vim file browser/manager-ish!
+  " call dein#add('scrooloose/nerdtree')
+
+  " Trying vinegar out mostly as a nerdtree substitute - it enhances vim's builtin netrw
+  call dein#add('tpope/vim-vinegar')
+
+  " Auto-commenting and uncommenting with keyboard shortcuts.
+  "call dein#add('scrooloose/nerdcommenter')
+  call dein#add('tpope/vim-commentary')
+
+  " Snippets!
+  call dein#add('SirVer/ultisnips')
+    call dein#add( 'honza/vim-snippets')
+
+  " Surround the current letter, word, sentence etc. with fx. quotes or an HTML tag etc. 
+  " vim-repeat is a dependency
+  call dein#add('tpope/vim-surround')
+    call dein#add('tpope/vim-repeat')
+
+  " Visually highlight matching parentheses, tags etc.
+  call dein#add('Valloric/MatchTagAlways')
+
+  " Motions jump inside words following cammelCase.
+  " Uncommented for now as I'm not using it at all currently
+  " It has various kinda annoying bugs
+  "call dein#add('bkad/CamelCaseMotion')
+
+  " Search for files and within files. 
+  " call dein#add('Shougo/denite.nvim')
+
+  " Git integration for vim
+  call dein#add('tpope/vim-fugitive')
+
+  " Integration of various linux programs directly from vim, like rename, file moving etc.
+  call dein#add('tpope/vim-eunuch')
+
+  " Syntax checker that - unlike syntastic - runs asynchronously.
+  call dein#add('neomake/neomake')
+
+  " fzf inside vim! Initially there's really only one reason I'm using this instead of :tabfind, 
+  " and that is because you can select MULTIPLE files and have them all opened in tabs, which is something that requires :arga in vim
+  " Edit: For now I'll just try using :FZF which works without this plugin!
+  "call dein#add('junegunn/fzf.vim')
+
+  " A nice theme
+  call dein#add('mhartington/oceanic-next')
+" Another nice theme 
+  call dein#add('morhetz/gruvbox')
+   
+  " Adds a fancy status bar with lots of useful info too
+  call dein#add('bling/vim-airline')
+  " call dein#add('rking/ag.vim')
+  "   call dein#add('ggreer/the_silver_searcher')
+  " For now, since it doesn't come built in by default it seems
+  
+  " Language support
+
+  " Latex Toolbox
+  call dein#add('LaTeX-Box-Team/LaTeX-Box')
+
+  " TypeScript syntax highlighting/checking and more
+  call dein#add('leafgarland/typescript-vim')
+
+  " Markdown folding, syntax checking, keybindings etc. Tabular is the dependency but it has to be loaded first. Tabular handles easy alignments btw.
+    call dein#add('godlygeek/tabular')
+  call dein#add('plasticboy/vim-markdown')
+
+  " Better support for Org files in vim
+  call dein#add('jceb/vim-orgmode')
+
+  " Also create a vim colorscheme when calling wal
+  call dein#add('dylanaraps/wal.vim')
+
+  " Uncomment until I get this working
+  " call dein#add('artur-shaik/vim-javacomplete2')
+  " trying out tabnine for completion
+  " UPDATE: deoplete-tabnine installs tabnine automatically, and at a location where it expects it to be
+  "call dein#add('zxqfl/tabnine-vim')
+    " make tabnine available as a source for deoplete
+    "call dein#add('tbodt/deoplete-tabnine', { 'build': './install.sh' })
+
+  " VIM AND NEOVIM SPECIFICS:
+
+  " Note that these will make NeoVim and regular vim's Vundle want to uninstall
+  " the other's plugins, so as a workaround these can be temporarily moved out
+  " of these conditionals
+
+  if has('nvim')
+    " :w !sudo tee > /dev/null % doesn't work in nvim currently: https://github.com/neovim/neovim/issues/8217#issuecomment-402310332
+    " Therefore this workaround
+    call dein#add('lambdalisue/suda.vim')
+  endif
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable " Enables syntax highlighting. syntax enable != syntax on, there are some differences
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+" DEIN PLUGIN MANAGER END }}}
+
+
+
+" PLUGIN Settings {{{
+
+" neomake (syntax checker)
+
+" The below makes neomake run automatically under different circumstances.
+" Alternately you can run it manually with :Neomake
+
+" When writing a buffer (no delay).
+call neomake#configure#automake('w')
+" When writing a buffer (no delay), and on normal mode changes (after 750ms).
+"call neomake#configure#automake('nw', 750)
+" When reading a buffer (after 1s), and when writing (no delay).
+"call neomake#configure#automake('rw', 1000)
+" Full config: when writing or reading a buffer, and on changes in insert and
+" normal mode (after 1s; no delay when writing).
+"call neomake#configure#automake('nrwi', 500)
+" Automatically open the list of linting errors when neomake is run
+let g:neomake_open_list = 2
+
 
 " Ultisnips:
 
@@ -58,10 +209,12 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 " -----------------------------------------------------------
 
-" Match Always
-"
+" Match Always:
+
 let g:mta_filetypes = {
     \ 'html' : 1,
     \ 'xhtml' : 1,
@@ -72,15 +225,285 @@ let g:mta_filetypes = {
 
 " -----------------------------------------------------------
 
+" EasyMotion:
 
-" SETTINGS
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
-let g:rehash256=1
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+
+" Bi-directional find motion
+" Use `s{char}{label}`
+nmap s <Plug>(easymotion-s) 
+" use: `s{char}{char}{label}` - needs an extra keystroke, but may be more comfortable.
+"nmap s <Plug>(easymotion-s2) 
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+" -----------------------------------------------------------
+
+" Maybe Lion or especially vim-easy-align is better, but for now lets just try
+" and see if this does the job as it's a dependency of vim-markdown anyway
+
+" Tabularize:
+
+" Auto align a <count> (range) (say 10,a= for the current line + 9 lines) automatically based on the displayed delimeters: 
+" = and :  for both normal and visual modes.
+nmap <Leader>a= :Tabularize /=<CR>
+vmap <Leader>a= :Tabularize /=<CR>
+nmap <Leader>a: :Tabularize /:\zs<CR>
+vmap <Leader>a: :Tabularize /:\zs<CR>
+
+" -----------------------------------------------------------
+
+" denite:
+
+" Search from current dir:
+
+" Search for files by name from the current dir:
+ " nnoremap <Leader>p :Denite -default-action=tabopen file/rec<cr>
+
+" Search for text in files recursively by name from the current dir:
+" nnoremap <space>/ :Denite -default-action=tabopen grep:.<cr>
+
+" Search from custom dir:     
+" Why? Because if my cwd is fx. ~/ searching everywhere from there is a LOT of files/dirs. Don't want to have to cd around every time I use Denite.
+" TODO: Seemingly the path is ignored and it searches from CWD anyway?
+
+" fun! DeniteFileSearchPath()
+  " :exec ":Denite -default-action=tabopen -path=" . input("Desired root path for searching for files by name?: ") . " file/rec"
+" endfun
+
+" fun! DeniteFileSearchInsidePath()
+  " :exec ":Denite -default-action=tabopen -path=" . input("Desired root path for searching inside files?: ") . " grep:."
+" endfun
+
+" nnoremap <Leader>o :call DeniteFileSearchPath()<cr>
+
+" nnoremap <Leader>i :call DeniteFileSearchInsidePath()<cr>
+
+" -----------------------------------------------------------
+
+" Deoplete and JavaComplete:
+" Use deoplete:
+let g:deoplete#enable_at_startup = 1
+
+set omnifunc=syntaxcomplete#Complete
+
+let g:deoplete#omni_patterns = {}
+let g:deoplete#omni_patterns.java = '[^. *\t]\.\w*'
+let g:deoplete#sources = {}
+let g:deoplete#sources._ = []
+let g:deoplete#file#enable_buffer_path = 1
+
+" JavaComplete Config
+
+"autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+" set rtp+='/home/i/dotfiles/vim/.vim/pluginss/neovim/.cache/init.vim/.dein/binaries/2.1.11/x86_64-unknown-linux-musl/'
+
+
+" {{{ CamelCaseMotion
+
+" Directly from :help camelcasemotion.txt and its github
+" No mapping for aw, ae etc. Maybe a good thing, use those when you want the old behaviour?
+
+"map <silent> w <Plug>CamelCaseMotion_w
+"map <silent> b <Plug>CamelCaseMotion_b
+"map <silent> e <Plug>CamelCaseMotion_e
+"map <silent> ge <Plug>CamelCaseMotion_ge
+"" Sunmap unmaps from both visual and select mode.
+"sunmap w
+"sunmap b
+"sunmap e
+"sunmap ge
+"
+"omap <silent> iw <Plug>CamelCaseMotion_iw
+"xmap <silent> iw <Plug>CamelCaseMotion_iw
+"omap <silent> ib <Plug>CamelCaseMotion_ib
+"xmap <silent> ib <Plug>CamelCaseMotion_ib
+"omap <silent> ie <Plug>CamelCaseMotion_ie
+"xmap <silent> ie <Plug>CamelCaseMotion_ie
+"
+"" Map inside mode motions
+"imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+"imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
+" }}}
+
+" }}}
+
+" SETTINGS {{{
+
+" Used by nerdcommenter, supposedly it detects what the file type is and changes behaviour accordingly.
+" filetype plugin on
+
+
+" augroup for all my autocmds for now. This means reloading vimrc should run more smoothly, because the autocmds are
+" overwritten correctly: https://vi.stackexchange.com/questions/9455/why-should-i-use-augroup
+augroup my
+    autocmd!
+augroup END
+
+" > VIM AND NEOVIM SPECIFICS
+
+" All these are defaults in neovim:
+if !has('nvim')
+  set backspace=indent,eol,start " Makes the BackSpace-button work
+  set autoindent " Keep a newline at the same level as the current indentation.
+  set smarttab " Delete tabs as one space, use tabs at the start of a line, spaces elsewhere.
+  set wildmenu " Nice menu to navigate through possible completions
+  set mouse=a " Should enforce mouse copying and pasting capabilities
+  set incsearch " Match /searches as typed (saves time)
+endif
+
+"Always show at least one line above/below the cursor.
+set scrolloff=3
+
+" Nicer looking :set list (hidden characters): This sets how tabs, trailing spaces, nbps (a special break character) are shown. Unlike default EOL is not shown at all.
+" Precedes and extends are the symbols used when wrap is off, to show you there's text further to the left or right (off screen) respectively.
+set listchars=tab:ᐅ\ ,trail:-,extends:>,precedes:<,nbsp:+
+
+" Don't syntax check lines longer than this amount of characters. Otherwise
+" vim can be slowed down GREATLY, taking the OS with it:
+" Default is 3000
+set synmaxcol=1000
+
+" With st terminal (and maybe others?) vim autoclears the clipboard+selection on exit. This prevents that.
+" https://stackoverflow.com/questions/6453595/prevent-vim-from-clearing-the-clipboard-on-exit
+autocmd my VimLeave * call system("xclip -selection clipboard -i", getreg('+'))
+
+" Auto line-break at 120 characters. Maybe a good standard to keep up?
+set textwidth=120
+" Annoyingly this applies anywhere, which is annoying when editing an Org table fx. 
+" So maybe it should be disabled for Org files in vim? For now I set it to 234 which is somewhat arbitrary, but it's the
+" amount of characters I currently seem to be able to have per line in vim with the current font size
+autocmd my FileType org set textwidth=234
+
+
+
+
+" {{{ STATUSLINE
+
+set laststatus=2
+
+set statusline=%#MatchParen#
+  set statusline+=%{fugitive#head()}
+set statusline+=%*
+set statusline+=\ %f\ 
+set statusline+=%#warningmsg#
+  "display a warning if fileformat isnt unix
+  set statusline+=%{&ff!='unix'?'['.&ff.']':''}
+  "display a warning if file encoding isnt utf-8
+  set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
+set statusline+=%*
+set statusline+=%h "help file flag
+set statusline+=%#identifier#
+  set statusline+=%r "read only flag
+  set statusline+=%m "modified flag
+set statusline+=%*
+set statusline+=%= "left/right separator
+set statusline+=%c\  "cursor column
+set statusline+=%l/%L "cursor line/total lines
+set statusline+=\ %P "percent through file
+
+" }}}
+
+" {{{ FONTS AND COLORS
+
+" Adds truecolor (24-bit) support to vim for terminals supporting it, and it looks nice for a lot of themes - but for OceanicNext I kinda like it better with it disabled.
+" Incidentally enabling this means the highlight colors guibg etc. are used instead  of ctermbg colors, which are specified independently.
+set termguicolors
+
+" set guifont=Monaco
+
+" My colorscheme isn't restored properly when loading a session, so this should fix that:
+
+
+" Defining the colorscheme after syntax highligting is enabled, because otherwise there was weird errors
+" {{{ Molokai
+"let g:rehash256=1
+"colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
+ 
+" autocmd SessionLoadPost * colorscheme molokai_miyalys
+
+" }}}
+
+" {{{ OceanicNext
+
+ 
+"colorscheme OceanicNext
+""" Overwriting some defaults. Specifically the main background color
+"highlight Normal guibg=#1f1f1f
+"highlight LineNr guibg=#1f1f1f
+"highlight EndOfBuffer guibg=#1f1f1f
+"highlight ErrorMsg guibg=#1f1f1f
+"highlight FoldColumn guibg=#1f1f1f
+"highlight SignColumn guibg=#1f1f1f
+"highlight Conceal guibg=#1f1f1f
+""" Comments were a bit too dark so they were barely readable
+"highlight Comment guifg=#6f7d88
+""" set list characters were a similar color. I use it rarely and in that case I'd like it to stand out.
+"highlight SpecialKey guifg=#ffffff guibg=#ff0000
+
+
+" {{{ gruvbox
+
+" Enable italics for gruvbox
+let g:gruvbox_italic=1
+colorscheme gruvbox
+
+" Markdown:
+
+" Plaintext color
+" hi link mkdNonListItemBlock GruvboxPurple
+
+" The color of the # before the heading
+" hi link mkdHeading GruvboxRed
+          
+" The color of the ` around literal blocks
+hi link mkdCodeDelimiter GruboxYellow
+
+" All markdown headers are affected by ?:
+" ?
+" But you can also set them specifically via htmlH2, htmlH3 etc.
+hi link htmlH3 GruvboxYellowBold
+" urls:
+hi link mkdInlineURL GruvboxBlue
+" backticks + literal blocks:
+hi link mkdCode GruvboxPurple
+" list dashes/numbers
+hi link mkdListItem GruvBoxRed
+" list content
+hi link mkdListItemLine GruvBoxRed
+" Stars AROUND bold text
+"hi link mkdBold GruvBoxWhite
+" The bold text INSIDE those stars or inside <strong> in HTML.
+hi clear htmlBold
+hi link htmlBold GruvBoxRed
+" Italic text
+hi clear htmlItalic
+hi link htmlItalic GruvBoxAqua
+
+" }}}
+
+
+" }}}
+
+" darker color for line numbers in non-gvim vim:
+" Colors here: http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+" highlight LineNr ctermfg=darkblue 
+
+" }}}
+" Set sessions to save current dir, fold states and tabpages. Several others can be save if wanted, fx. hidden buffers, empty windows etc.
+set sessionoptions=curdir,folds,tabpages
 
 if has('gui_running')
   " Make shift-insert work like in Xterm
   map <S-Insert> <MiddleMouse>
   map! <S-Insert> <MiddleMouse>
+  set lines=999 columns=999
 endif
 
 " Set the file encoding to utf8:
@@ -90,8 +513,6 @@ if has("multi_byte")
   endif
   set encoding=utf-8                     " better default than latin1
   setglobal fileencoding=utf-8           " change default file encoding when writing new files
-  "setglobal bomb                        " use a BOM when writing new files
-  set fileencodings=ucs-bom,utf-8,latin1 " order to check for encodings when reading files
 endif
 " Source:
 "http://stackoverflow.com/questions/5477565/how-to-setup-vim-properly-for-editing-in-utf-8
@@ -99,53 +520,53 @@ endif
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
-autocmd BufReadPost *
+autocmd my BufReadPost *
     \ if line(" '\"") > 0 && line("'\"") <= line("$") |
     \   exe " normal! g`\"" |
     \ endif
 
-syntax on " Enables syntax hilighting:
-
 set relativenumber " Relative line numbers.
 set number " except for the current line
-" darker color for line numbers in non-gvim vim:
-" Colors here: http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
-highlight LineNr ctermfg=darkblue 
 set showmatch
 set cursorcolumn " Highlight current column (horizontal position)."
 set cursorline " Highlight current line, kind of like a crosshair when combined with the above.
+" Change the the way the cursorline displays, specifically to prevent the underline, which hides underscores
+"hi CursorLine cterm=bold ctermbg=237 guibg=#343d46
+hi CursorLine cterm=none ctermbg=237 guibg=#343d46
+" dvorak:
+"nnoremap l s
+"nnoremap s l
 
-set guioptions=agit " For gvim: a: copy pasting, i: vim icon
+" For gvim:
+" a: copy text to primary selection when just highlighted in visual mode. Otherwise only delete or yank will do it.
+" g: inactive menu items gray instead of invisible
+" t: include tearoff menu items? i: vim icon
+set guioptions=ag
+
+set hidden " nohidden is default, and now I'm moving away from 1 file = 1 tab setting hidden is better, so I can switch away from a buffer even if there's changes on it
 
 
-set nohidden " When I close a tab, remove the buffer
-
-set backspace=indent,eol,start " Makes the BackSpace-button work:
-
-set directory=/home/lys/.tmp " Don't clutter my dirs up with swp and tmp files. Not using ~ due to sudoedit.
-
-set mouse=a " Should enforce mouse copying and pasting capabilities:
+set directory=/home/i/.tmp " Don't clutter my dirs up with swp and tmp files. Not using ~ due to sudoedit.
 
 " Sets the use of the * register rather than the + register (useful for copying and pasting):
 " unnamedplus is the standard internal vim buffer, and * is selection. This should sync them.
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 
 " Some search-related features:
 " ignorecase makes the search case insensitive.
 " smartcase makes a search containing any upper case letters case sensitive.
 set ignorecase
 set smartcase
-set incsearch " Match /searches as typed (saves time)
 
-set smarttab " Delete tabs as one space, use tabs at the start of a line, spaces elsewhere.
-set expandtab " Expandtab: Changes inserted tabs to spaces, so noexpandtab should prevent that, I guess? Wonder what's default.
+set expandtab " Expandtab: Changes inserted tabs to spaces, so noexpandtab should prevent that, I guess? Default is off (ie. noexpandtab).
 
-set tabstop=2 " Tabstop: Sets how many spaces a manually inserted tab consists of.
-set shiftwidth=2 " Shiftwidth: Sets how many spaces an automatically inserted tab consists of.
-set softtabstop=2 " Softtabstop:
+set tabstop=2 " Tabstop: Number of spaces that a <Tab> character in the file counts for.
+set shiftwidth=2 " Shiftwidth: Number of spaces to use for each step of (auto)indent.  Used for 'cindent', >>, <<, etc.
+set softtabstop=2 " Softtabstop: Number of spaces that a <Tab> counts for while performing editing operations, like inserting a <Tab> or using <BS>.
 
-set autoindent " Keep a newline at the same level as the current indentation.
-set smartindent " smartindent automatically inserts one extra level of indentation in some cases, and works for C-like files.
+" smartindent automatically inserts one extra level of indentation in some cases - like when creating a loop or a function where autoindent would not indent - it works for C-like languages.
+" It also has the annoying side effect of preventing comments from being indented with >> and also removing indentation as soon as you add a comment symbol to the line. Therefore disabled for now.
+" set smartindent 
 
 " An alternative, which is NOT to be used along with smartindent, is file type
 " based indentation.
@@ -158,21 +579,105 @@ set showmode
 " Prevent auto indentation when pasting from clipboard. Not sure how this works, but worth a try if it automatically detects pasting.
 set pastetoggle=togl
 
-set wildmenu " Nice menu to navigate through possible completions
+" Automatically save file when make is called.
+set autowrite
+
+" Otherwise vim complains when I open some files, even though this is related to pattern matching.
+" set maxmempattern=2000
+
+" Enable persistent undo, ie. preserving undo history even when exiting and restarting vim
+set undofile                " Save undos after file closes
+"set undodir=$HOME/.vim/undo " where to save undo histories. Default is .cache/vim/undo
+
+" Try a shorter timeout length for mappings, so fx. typing jj without it escaping will be faster. Default is 1000
+set timeoutlen=600
+
+" FIND / COMPLETION
+
+" Search recursively into subdirectories when using :find
+" NOTE: If always enabled it causes a crash when trying to "gf" on a directory it seems, in nvim. At least when doing gf on this line in .zshrc: ZSH=/usr/share/oh-my-zsh/ 
+set path+=**
+
+" Default to magic mode for regexes
+set magic
+
+" Ignore .class files and node_modules. Also affects :find (tab completion) and :vimgrep. 
+" target is the standard maven dir for compiled files. *class is already ignored but it copies over .html too, so this fixes that. For some reason tabfind includes things from /usr/include even though my cwd is in some java project?! Hopefully this explicit ignore fixes that.
+" classes is the output dir maven uses for compiled files
+set wildignore+=*.class,*/node_modules/*,.git,*/target/*,/usr/include/*,*/classes/*
 
 " On tab press 1: Complete as much as possible, on 2: show a list of completions, on 3: cycle through all available completions.
 set wildmode=longest,list,full
 
+" Make file name completion case-insensitive.
+set wildignorecase
 
-" -----------------------------------------------------------
+" Reload vimrc automatically when it's changed/saved:
+" https://stackoverflow.com/questions/2400264/is-it-possible-to-apply-vim-configurations-without-restarting/2403926#2403926
+autocmd my BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+
+" Reload .Xresources on updates
+autocmd my BufWritePost .Xresources !xrdb %
+
+" Reload termite config on updates
+autocmd my BufWritePost .config/termite/config !killall -USR1 termite
+
+" FZF
+
+" Add system installed fzf to vim: https://github.com/junegunn/fzf#as-vim-plugin
+" Update: This appears to be unnecesary? :FZF is recognized just fine already?
+"set rtp+=~/.fzf
+
+" Exclude more file types from vim's FZF via appending to the env, ie. files that aren't text files. Maybe previewing images is nice though?
+" Specifically my FZF_DEFAULT_COMMAND ends with fd and some options to it, and --ignore-file is one such option. --ignore-file is NOT an FZF flag.
+let $FZF_DEFAULT_COMMAND .= " --ignore-file /home/i/dotfiles/fzf_vim_fd_excludes.txt"
+
+" User commands "must start with an uppercase letter" so using an abbreviation instead of a command
+cabb fzf FZF
 
 
-" MAPPINGS:
+" Experiment, showing buffers as tabs at the top, via airline:
+" I think I will try to not use it initially, as it gets to feel messy anyway,
+" and with few tabs I can just switch through them randomly, and with many
+" it's better to use :b autocompletion.
 
-" Sets the leader character:
-let mapleader = ","
+" Enable the list of buffers
+"let g:airline#extensions#tabline#enabled = 1
 
-" Disable arrow keys
+" Show just the filename
+"let g:airline#extensions#tabline#fnamemod = ':t'
+
+
+" NETRW
+
+" remove the netrw banner (default in vinegar)
+"let g:netrw_banner = 0
+"
+" netrw view type (try the different ones)
+" There are four different view types: thin, long, wide and tree.
+let g:netrw_liststyle = 3
+"
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+
+" Default size is 50% of the screen. Set this to this value instead:
+let g:netrw_winsize = 15
+
+" Ignore files set in wildignore in netrw as well (fx. .class files)
+let g:netrw_list_hide = &wildignore
+
+" Press p to preview a file (default) - A value of 1 makes it open the preview in a vertical split rather than horizontal. Unfortunately its size is the same as netrw_winsize, which is fine for netrw but bad for a preview.
+let g:netrw_preview = 1
+
+" Make netrw launch at vim startup
+"  autocmd my VimEnter * :Vexplore
+
+" }}}
+
+
+" MAPPINGS AND ABBREVIATIONS {{{
+
+" Disable arrow keys (reset)
 map <up> <nop>
 map <down> <nop>
 map <left> <nop>
@@ -182,44 +687,89 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
+" Move around faster with capital versions of the movement keys
+nnoremap H ^
+nnoremap L $
+"nnoremap J 5j " used for join
+nnoremap K 5k
+
+" Move back and forth in the jump list
+nnoremap <Left> <C-O>
+nnoremap <Right> <C-I>
+" Use Up/Down for going back and forth in the auto complete list. Maybe I could find something better to use the keys for.
+inoremap <Up> <C-P>
+inoremap <Down> <C-N>
+
+" TODO: Use CTRL+arrow keys for something useful?
+
+" Easier file name completion
+nnoremap <leader>f <c-x><c-f>
+
 noremap <F1> :call NumberToggle()<CR>
 inoremap <F1> <Esc>:call NumberToggle()<CR>
 nnoremap <F2> :set invpaste paste?<CR>
-map <F3> :NERDTreeToggle<Return>
-map <F4> :set invnumber<CR>
+
+"map <F3> :NERDTreeToggle<CR>
+" Trying out replacing NERDTree with netrw since it's built in, and I currently rarely use it anyway
+" Lexplore toggles a vertical split, while Vexplore continually splits the window into more parts, and then you have to write a custom function to have a toggle behaviour. Lexplore is new and it solves this toggle issue.
+map <F3> :Lexplore<CR>
+
+"map <F4> :set invnumber<CR> " Not sure what I used this for?
+" Remove search highlight until next search (no highlight). Just need to find a good key for this bind.
+map <F4> :noh<CR>
 
 " Sort CSS properties:
-nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
+autocmd my FileType css nmap <F7> :g#\({\n\)\@<=#.,/}/sort<CR>
+
+" Format json nicely
+" Alternate method: :%!jq .
+"autocmd my FileType json nmap <F7> ':%!python -m json.tool'
+autocmd my FileType json nmap <F7> ':%!jq .
 
 " Save and load the currently opened windows and files in the current folder:
-nmap <F9> :source Session.vim<CR>
 nnoremap <F5> :mksession!<CR>
+nmap <F9> :source Session.vim<CR>
 
+" Delete to black hole buffer more easily, when not wanting to override the yank register
+" Ideally it would just be d in the mapping, so it could also be used for dw etc. but for some reason that doesn't work
+nnoremap <leader>d "_dd 
 
-" Easier moving in tabs and windows
+" Easier moving in windows
 " Use H J K L while holding down Ctrl.
-map <C-H> <C-W>h<C-W>_
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
-map <C-L> <C-W>l<C-W>_
+map <C-H> :wincmd h<CR>
+map <C-J> :wincmd j<CR>
+map <C-K> :wincmd k<CR>
+map <C-L> :wincmd l<CR>
+" This line somehow messes up CTRL-I so it no longer goes back in the jump list? Apparently tab and CTRL-i is the same in many terminals, even! Termite included!
+"nmap <tab> <C-W>w
+"nunmap <C-I>
+" Wish I knew the inverse command of that, that just cycles between windows in
+" the opposite direction, so I could bind it to <S-tab>. :wincmd doesn't seem to be able to do it?
 
-" Open Url on this line with the browser \w
-map <Leader>w :call Browser ()<CR>
+" Easier moving in tabs: Map æ to tab previous and ø to tab next:
+nmap Æ gT
+nmap Ø gt
+" Switched to using buffers primarily:
+nmap æ :bp<CR>
+nmap ø :bn<CR>
+"nnoremap Ø :tabnew<CR>
 
-" ,t to open a New tab:
-map <Leader>tn :tabnew<CR>
-" ,c to close the current tab:
-map <Leader>tc :tabclose<CR>
-
-
-" Otherwise vim complains when I open some files, even though this is related to pattern matching.
-" set maxmempattern=2000
+" ,c to close the current tab: TODO: For some reason it's annoyingly slow, as if waiting for a longer command?
+nmap <Leader>c :tabclose<CR>
 
 
 " Insert newlines without entering insert modes. j and k makes the cursor stay at
 " the line it was at to begin with. S-Enter does not work currently.
 nmap <S-Enter> O<Esc>j
 nmap <CR> o<Esc>k
+
+" Scroll a bit faster than one line at a time:
+nnoremap <C-y> 5<C-y>
+nnoremap <C-e> 5<C-e>
+
+" CD vim to the current buffers directory. (can also be lcd instead, to only
+" change it for the window. Can't be per tab I think, or?)
+nnoremap ,cd :cd %:p:h<CR>
 
 " Open file under cursor in new tab by default
 nmap gf <C-w>gf
@@ -232,105 +782,284 @@ inoremap hh <Esc>:w<CR>
 " Easier saving - normal mode
  nmap qw :w<CR>
 
-" Map æ to tab previous and ø to tab next:
-nmap æ gT
-nmap ø gt
-" nnoremap <S-ø> :tabnew
-
 " CTRL-g should show the full path of the current file:
 nnoremap <C-g> 1<C-g>
 
-nnoremap <leader>n :call NumberToggle()<cr>
+" Open Url on this line with the browser \w
+map <Leader>w :call Browser ()<CR>
 
-" Unite.vim: Search for files by name:
-nnoremap <C-p> :Unite file_rec/async<cr>
-
-" Unite.vim: Search for text in file recursively from current directory by name:
-nnoremap <space>/ :Unite grep:.<cr>
-" nnoremap <space>/ :Unite ag:.<cr>
-
-" CTRL-N for word completion is too weird. Maybe this is a little bit better?:
+" CTRL-N for word completion is not very handy. Maybe this is a little bit better?:
 imap ½½ <C-n>
+" Or this?
+inoremap xz <C-n>
 
 " Go directly from insert mode to command mode (:i)
 imap ii <C-[>:
 
 " Easier escape from insert mode, by mapping jj to Esc (needs to be a combination that is never
 " used in actual words):
-inoremap jj <Esc>l
+inoremap jj <Esc>
 
-" If you forget to sudo edit something, this can make you sudo inside vim:
-cmap w!! w !sudo tee > /dev/null %
-" cmap w!! w !sudo dd of=%
-"
-
-" For coding C: (binary C, because the prefix c is already used by nerdcommenter)
-map <leader>bc :call C_compile ()<CR>
-map <leader>bcr :call C_compile_run ()<CR>
-
-map <leader>f :call ClearAllButMatches ()<CR>
+map <leader>x :call ClearAllButMatches ()<CR>
 nmap <leader>r :Rename 
 
-" Prevent lazy pinky on the shift button
-:command W w
-:command Q q
-:command WQ wq
-:command Wq wq
-:command QA wq
-:command Qa wq
+" Prevent lazy pinky on the shift button. ! is added in front to suppress errors when vimrc is reloaded without exiting. It just overwrites the existing command silently.
+command! W w
+command! Q q
+command! WQ wq
+command! Wq wq
+command! QA wq
+command! Qa wq
+command! Tabe tabe
 
-" Abbreviations:
+" VIM AND NEOVIM SPECIFICS
+
+if !has('nvim')
+  " If you forget to sudo edit something, this can make you sudo inside vim:
+  " The former works fine in vim but not in nvim, so using a plugin for the latter.
+  cmap w!! w !sudo tee > /dev/null %
+
+  " For some weird reason mapping ALT works in nvim but not in vim, so these should solve that
+  " Quickly close other windows, fx. those opened to show compile errors. Faster and more convenient than switching to it and closing it
+  nmap O :only<CR>
+
+  " Quickly open a terminal in the same dir as the currently opened buffer
+  nmap T :Silent ! termite -d "%:p:h" &<CR>
+endif
+
+if has('nvim')
+  " Save current file with sudo
+  cmap w!! w suda://%
+  " Open current file with sudo (only asks for password once?)
+  cmap e!! e suda://% 
+  " Escape from neovim terminal more easily, with escape instead of C-\ C-n
+  tnoremap <Esc> <C-\><C-n>
+
+  " Btw. M-o works exactly the same, apparently also = ALT.
+  nmap <a-o> :only<CR>
+
+  " Quickly open a terminal in the same dir as the currently opened buffer
+  nmap <a-s-t> :Silent ! termite -d "%:p:h" &<CR>
+endif
+
+
+" ABBREVIATIONS:
+
 " Typing cmt is automatically expanded to this:
-iabb cmt # Comment - Entered on :r! date-JA by lys
-cabb what tabe /home/lys/linux/vim/vim.rst
+
+"iab nna AD-noter fra d. <Esc>:r !date<Enter>o<Enter><Esc>
+iabb cmt # Comment - Entered on <Esc>:r! date<Enter>kJA by miyalys<Enter>
+
+" I use tabe all the time, so might as well be a bit shorter, like :e
+cabb ta tabe
+
+" }}}
 
 
-" FUNCTIONS:
+" {{{ FOLDS
 
-" Used in functions to make the call silent. (ie. no "Hit ENTER to Continue"
+" Open and close the given fold more easily
+nmap <space> za
+
+" Let the default fold method be marker
+set foldmethod=marker
+
+" Easily toggle between marker and indentation based folds:
+map <leader>ff :call ToggleFold()<cr>
+
+fun! ToggleFold()
+  if &foldmethod == 'marker'
+    set foldmethod=indent
+  else
+    set foldmethod=marker
+  endif
+endfun
+
+" Fold out level 1 header(s) (#) by default for markdown files, so all ## can be seen immediately:
+" Why? Because I typically only have one #, roughly equal to the file name, so
+" folding the entire file down to just that doesn't show the file contents very well
+autocmd my Filetype markdown setlocal foldlevel=1
+autocmd my Filetype rst setlocal foldlevel=1
+
+" }}}
+
+
+" FUNCTIONS {{{
+
+" Move block of code up or down. Limited to visual mode?
+
+fun! s:MoveBlockDown() range
+  execute a:firstline "," a:lastline "move '>+1"
+  normal! gv=gv
+endfun
+
+fun! s:MoveBlockUp() range
+  execute a:firstline "," a:lastline "move '<-2"
+  normal! gv=gv
+endfun
+
+" Just for testing quickly! Move to binds section afterwards
+vnoremap <silent> <A-j> :call <SID>MoveBlockDown()<CR>
+vnoremap <silent> <A-k> :call <SID>MoveBlockUp()<CR>
+"vnoremap <silent> <C-S-j> :call <SID>MoveBlockDown()<CR>
+"vnoremap <silent> <C-S-k> :call <SID>MoveBlockUp()<CR>
+
+
+" Possibly useful function for automatically diffing between the saved file
+" and the swap file, to determine if swap should be recovered or deleted.
+command! DiffAgainstFileOnDisk call DiffAgainstFileOnDisk()
+
+fun! DiffAgainstFileOnDisk()
+  :w! /tmp/working_copy
+  exec "!diff /tmp/working_copy %"
+endfun
+
+
+
+" Used in functions to make the call silent. (ie. no "Hit ENTER to Continue")
 command! -nargs=1 Silent
 \ | execute ':silent '.<q-args>
 \ | execute ':redraw!'
 
-function! Browser ()
+fun! Browser ()
    let line = getline (".")
    let line = matchstr (line, "http[^   ]*")
    exec "Silent !firefox ".line
-endfunction
+endfun
 
 
 " Switch between absolute and relative line numbers easily.
-function! NumberToggle()
+fun! NumberToggle()
   if(&relativenumber == 1)
     set norelativenumber
   else
     set relativenumber
   endif
-endfunc
+endfun
 
-" Compiles the current program you're inside:
-function! C_compile ()
-	exec "!gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
-endfunction
+" }}}
 
-" Compiles and runs the current program you're inside:
-function! C_compile_run ()
-	exec "Silent !gcc -Wall -Werror -pedantic -o x/%:t:r %:t" 
-	exec "!x/%:t:r"
-endfunction
+
+" {{{ SUPPORT FOR LANGUAGES:
+" Use F6 for compile and F7 for (compile and) run
+
+" Bind F6 to make by default. Others can override it then.
+nmap <F6> :make<CR>
+
+" Automatically remove trailing white space when writing a file of these types
+" e means suppress errors in case nothing matches the search.
+" Warning: This removes trailing whitespace inside multi line strings as well!
+"autocmd my FileType c,cpp,java,php,py,javascript autocmd BufWritePre <buffer> %s/\s\+$//e
+autocmd my FileType c,cpp,java,php,py,javascript autocmd BufWritePre <buffer> :call <SID>StripTrailingWhiteSpaces()
+
+" If the above changes the cursor position and its annoying this should solve it
+fun! <SID>StripTrailingWhiteSpaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+"
+" https://stackoverflow.com/questions/356126/how-can-you-automatically-remove-trailing-whitespace-in-vim#356130
+
+" Exclude quickfix from buffer list so :bp :bn doesn't include them
+" netrw will be included only if specifically opened with :e or vim is opened on a dir, not if toggled with F3
+autocmd my FileType qf set nobuflisted
+
+" Autoclose quickfix or netrw window if it's the only window left open
+" experimenting: used to be winnr instead of bufnr
+autocmd my WinEnter * if bufnr('$') == 1 && &buftype == "quickfix"|q|endif
+autocmd my WinEnter * if bufnr('$') == 1 && &buftype == "netrw"|bd|endif
+
+
+" Alternately simply highlight trailing white space more clearly, fx. with the color used to highlight TODO
+"match Todo /\s\+$/
+"match GruvBoxRed /\s\*$/
+"match GruvBoxRed /\s$/
+
+" {{{ SHELL
+
+autocmd my FileType sh setlocal makeprg=shellcheck\ '%'
+autocmd my FileType sh map <buffer> <F7> :!zsh '%'<CR>
+
+" }}}
+
+" {{{ PYTHON:
+
+" My defaults are also set to 2, but this is necessary so vim's built-in python specific settings don't override them.
+autocmd my Filetype python setlocal ts=2 sw=2 sts=2
+" Show hidden characters (we want tabs to be very visible!)
+autocmd my Filetype python setlocal list
+" Change the color for how (fx.) tabs are shown so it stands out more
+autocmd my Filetype python hi NonText ctermfg=224 gui=bold guifg=Red
 
 " Run python program from inside vim:
-autocmd FileType python map <F6> :!python %<CR>
+autocmd FileType python map <buffer> <F7> :!python %<CR>
+"autocmd my FileType python setlocal expandtab shiftwidth=2 softtabstop=2 "currently defaults anyway
+" }}}
 
-" SML:
-autocmd BufReadPost *.sml silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
-autocmd BufReadPost *.sig silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
-autocmd FileType sml setlocal makeprg=mosml\ -P\ full\ '%'
+" {{{ SML
+autocmd my FileType sml setlocal makeprg=rlwrap\ mosml\ -P\ full\ '%'
+"autocmd my FileType sml setlocal makeprg=mosml\ -P\ full\ '%'
+"autocmd my BufReadPost *.sml silent setlocal filetype=sml tabstop=2 softtabstop=2 shiftwidth=2
 
+" }}}
 
-" TESTING GROUNDS
+" {{{ C
+
+" Manually create the x directory first! Otherwise it fails.
+" More info on :r see :help filename-modifiers
+
+autocmd my Filetype c let $CFLAGS="-g -Wall -Werror -pedantic"
+autocmd my Filetype c setlocal makeprg=gcc\ '%'\ -o\ '%:h/x/%:t:r'
+"autocmd my Filetype c setlocal makeprg=gcc '%'<
+
+" Compiles and runs the current program you're inside:
+fun! C_compile_run ()
+  make
+  exec "!%:h/x/%:t:r"
+endfun
+
+autocmd my Filetype c map <buffer> <F7> :call C_compile_run ()<CR>
+
+" }}}
+
+" {{{ Java:
+
+autocmd my Filetype java setlocal makeprg=javac12\ %
+autocmd my Filetype java setlocal errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+" copen opens a window to show the current list of errors
+autocmd my Filetype java map <buffer> <F7> :make!<Return> :! cd %:p:h && java12 %:t:r<Return>
+"autocmd my FileType java map <F8> :! java %:r<Return>
+autocmd my Filetype java map <buffer> <F10> :cprevious<Return>
+autocmd my Filetype java map <buffer> <F11> :cnext<Return>
+
+" }}}
+
+" {{{ Latex:
+ 
+"autocmd FileType tex BufNewFile,BufRead *.tex set makeprg=pdflatex\ %\ &&\ xdgopen\ %:r.pdf
+" Sebastian: " Replace with rubber?
+"autocmd FileType tex setlocal makeprg=pdflatex\ --shell-escape\ '%'
+autocmd FileType tex setlocal makeprg=rubber\ --pdf\ -s\ %
+" Jacob må være noget i denne stil:
+"autocmd FileType tex BufNewFile,BufRead *.tex set makeprg=latexmk\ aut-pdf\ -pvc\ --shell-escape\ '%'
+"autocmd Filetype tex setlocal errorformat=%f:%l:\ %m
+
+" Should launch a new terminal and in that run latexmk.
 "
-function! ClearAllButMatches()
+autocmd Filetype tex map <buffer> <F7> :!urxvt -e latexmk -pvc --shell-escape '%' &<cr><cr>
+ 
+" This works for for nvim:
+"autocmd Filetype tex map <buffer> <F7> :split term://latexmk -pvc --shell-escape '%'
+" }}}
+
+" }}}
+
+
+" {{{ TESTING GROUNDS
+" Deletes all other text besides what matches the most recent search
+fun! ClearAllButMatches()
     let old = @c
     let @c=""
     %s//\=setreg('C', submatch(0), 'l')/g
@@ -338,41 +1067,6 @@ function! ClearAllButMatches()
     put c
     0d _
     let @c = old
-endfunction
+endfun
 
-" Defining the colorscheme last, because otherwise there was weird errors
-colorscheme molokai_miyalys " Railcasts, distinguished, zenburn or molokai are good choices. Positioned above the change in linenr color!
-
-command! -bar -nargs=1 -bang -complete=file Rename :
-  \ let s:file = expand('%:p') |
-  \ setlocal modified |
-  \ keepalt saveas<bang> <args> |
-  \ if s:file !=# expand('%:p') |
-  \   call delete(s:file) |
-  \ endif |
-  \ unlet s:file
-
-" GRAVEYARD:
-
-" I started with a project of saving sessions globally somewhere, and
-" generating the name on the basis of a hash of the directory, reduced to
-" maybe 6 characters. Then it will perform this same hash when trying to load
-" the file. If a file is found with that hash, then load it.
-" This will also automatically overwrite sessions existing for the current
-" directory. If necessary a separate file with the working dir could be
-" created, mainly for the purpose of getting an overview of what projects are
-" saved in the directory. I'm thinking of using md5.
-
-" let s:sessionloaded = 0
-" function LoadSession()
-"  source ~/.vimsessions/Session.vim
-"  source Session.vim
-  "let s:sessionloaded = 1
-"endfunction
-"function SaveSession()
-  "if s:sessionloaded == 1
-"    mksession! ~/.vimsessions/
-"    mksession!
-"  end
-"endfunction
-" autocmd VimLeave * call SaveSession()
+" }}}
